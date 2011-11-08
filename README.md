@@ -6,6 +6,7 @@ Supported browsers: Google Chrome 15
 
 
 Author: Matej Simek  | www.matejsimek.cz
+
 Date:		9.11.2011
 
 Sources:
