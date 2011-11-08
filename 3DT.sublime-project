@@ -10,5 +10,6 @@
 		{
 			"path": "/D/School/PGR/webgl-lessons"
 		}
-	]
+	],
+	"default_line_ending": "unix"
 }
