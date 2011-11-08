@@ -107,3 +107,52 @@ function mvPopMatrix() {
 function degToRad(degrees) {
   return degrees * Math.PI / 180;
 }
+
+
+function rotateVectorX(vector, angle) {
+  var x, y,
+      sin, cos;
+  
+  if (angle === 0) {
+      return;
+  }
+  
+  y         = vector[1];
+  z         = vector[2];
+  sin       = Math.sin(angle);
+  cos       = Math.cos(angle);
+  vector[1] = y * cos - z * sin;
+  vector[2] = y * sin + z * cos;
+}
+
+function rotateVectorY(vector, angle) {
+  var x, z,
+      sin, cos;
+  
+  if (angle === 0) {
+      return;
+  }
+  
+  x         = vector[0];
+  z         = vector[2];
+  sin       = Math.sin(angle);
+  cos       = Math.cos(angle);
+  vector[0] = z * sin + x * cos;
+  vector[2] = z * cos - x * sin;
+}
+
+function rotateVectorZ(vector, angle) {
+  var x, y,
+      sin, cos;
+  
+  if (angle === 0) {
+      return;
+  }
+  
+  x         = vector[0];
+  y         = vector[1];            
+  sin       = Math.sin(angle);
+  cos       = Math.cos(angle);
+  vector[0] = x * cos - y * sin;
+  vector[1] = x * sin + y * cos;
+}

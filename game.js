@@ -8,30 +8,28 @@ Game = Class({
     this.ShadowOverlay	= new ShadowOverlay();
 
     // Create a floor...
-    this.addShape(new Cube(15, 0.1, 15, new Texture('#00AA00', '#FFFFFF')), false);
+    this.addShape(new Cube(16, 0.1, 16, new Texture('#00AA00', '#FFFFFF')), false);
 
     // Create the rotating objects with colors...
-    this.addShape(new Cube   (1, 1, 1, new Texture('#FF0000', '#FF0000')), true);
-    this.addShape(new Star	 (2,   2,   0.5, new Texture('#FFDD00', '#EE6600')), true);
-    this.addShape(new Pyramid(1.5, 1.5, 1.5, new Texture('#00FFDD', '#EE00FF')), true);
+    this.addShape(new Cube   (10, 1, 1, new Texture('#FF0000', '#FF0000')), true);    
     
     // Create the objects on the floor in black and white...
-    this.addShape(new Cube   (2, 1, 2, new Texture('#FFFFFF', '#000000')), true);
-    this.addShape(new Pyramid(2, 2, 2, new Texture('#FFFFFF', '#000000')), true);
+    this.addShape(new Cube   (8, 2, 2, new Texture('#0000FF', '#0000FF')), true);
+    this.addShape(new Pyramid(2, 2, 2, new Texture('#00FF00', '#00FF00')), true);
     
+    var sC = 0;
     // Create an instance of the floor...
-    this.shapeInstances.push({shape:0, location:[ 0, -8,  0], angle:[0, 0, 0]});
+    this.shapeInstances.push({shape:sC++, location:[ 0, -8,  0], angle:[0, 0, 0]});
     
     // Create instances of the rotating objects...
-    this.shapeInstances.push({shape:1, location:[-4,  5,  0], angle:[0, 0, 0]});
-    this.shapeInstances.push({shape:2, location:[ 0,  1,  0], angle:[0, 0, 0]});
-    this.shapeInstances.push({shape:3, location:[ 4, -3,  0], angle:[0, 0, 0]});
+    this.shapeInstances.push({shape:sC++, location:[-4,  5,  0], angle:[0, 0, 0]});    
     
     // Create instances for the objects on the floor...
-    this.shapeInstances.push({shape:4, location:[-8, -6,  8], angle:[0, 0, 0]});
-    this.shapeInstances.push({shape:4, location:[ 8, -6, -8], angle:[0, 0, 0]});
-    this.shapeInstances.push({shape:5, location:[-8, -6, -8], angle:[0, 0, 0]});
-    this.shapeInstances.push({shape:5, location:[ 8, -6,  8], angle:[0, 0, 0]});    
+    this.shapeInstances.push({shape:sC, location:[-8, -6,  8], angle:[0, 0, 0]});
+    this.shapeInstances.push({shape:sC++, location:[ 8, -6, -8], angle:[0, 1.55, 0]});
+
+    this.shapeInstances.push({shape:sC, location:[0, -6, 0], angle:[0, 0, 0]});
+    
 	},
 
 	/*
@@ -40,6 +38,7 @@ Game = Class({
   addShape: function(shape, shadow) {
       shape.shadow = shadow ? new ShadowBuilder(shape) : null;
       this.shapes.push(shape);
+      console.log("Creatign shape:", shape, " shadow:", shadow);
   },
 
   /*
@@ -101,7 +100,7 @@ Game = Class({
         shapeInstance = shapeInstances[i];
         shape         = this.shapes[shapeInstance.shape];
         shadow        = shape.shadow;
-        if (shadow !== null) {
+        if (shadow !== null) {          
             mvPushMatrix();
                 this.applyShapeInstance(shapeInstance);
                 shadow.update(this.light.location, shapeInstance.angle, mvMatrix, zoom);
@@ -120,14 +119,14 @@ Game = Class({
   update: function(elapsed) {
       var shapeInstances = this.shapeInstances;
       
-      this.cubeAngle   += 0.03  * elapsed;
+      this.cubeAngle   += 0.1  * elapsed;
       this.shadowAngle += 0.001 * elapsed;
       
       shapeInstances[1].angle[1] += 0.0006 * elapsed;
       shapeInstances[1].angle[2] += 0.0005 * elapsed;        
-      shapeInstances[2].angle[1] -= 0.0004 * elapsed;
-      shapeInstances[3].angle[0] += 0.0003 * elapsed;
-      shapeInstances[3].angle[1] -= 0.0005 * elapsed;                    
+      // shapeInstances[2].angle[1] -= 0.0004 * elapsed;
+      // shapeInstances[3].angle[0] += 0.0003 * elapsed;
+      // shapeInstances[3].angle[1] -= 0.0005 * elapsed;                    
   }
 
 

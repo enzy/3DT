@@ -116,54 +116,6 @@ ShadowBuilder = Class({
 	    }
 	},
 
-	rotateVectorX: function(vector, angle) {
-    var x, y,
-        sin, cos;
-    
-    if (angle === 0) {
-        return;
-    }
-    
-    y         = vector[1];
-    z         = vector[2];
-    sin       = Math.sin(angle);
-    cos       = Math.cos(angle);
-    vector[1] = y * cos - z * sin;
-    vector[2] = y * sin + z * cos;
-	},
-
-	rotateVectorY: function(vector, angle) {
-    var x, z,
-        sin, cos;
-    
-    if (angle === 0) {
-        return;
-    }
-    
-    x         = vector[0];
-    z         = vector[2];
-    sin       = Math.sin(angle);
-    cos       = Math.cos(angle);
-    vector[0] = z * sin + x * cos;
-    vector[2] = z * cos - x * sin;
-	},
-
-	rotateVectorZ: function(vector, angle) {
-    var x, y,
-        sin, cos;
-    
-    if (angle === 0) {
-        return;
-    }
-    
-    x         = vector[0];
-    y         = vector[1];            
-    sin       = Math.sin(angle);
-    cos       = Math.cos(angle);
-    vector[0] = x * cos - y * sin;
-    vector[1] = x * sin + y * cos;
-	},
-
 	/*
 	 * Update the shadow
 	 */
@@ -174,9 +126,9 @@ ShadowBuilder = Class({
 	        x, y, z;
 
 	    // Instead of rotating the object to face the light at the right angle it's a lot faster to rotate the light in the reverse direction
-	    this.rotateVectorX(vector, -lightAngle[0]);
-	    this.rotateVectorY(vector, -lightAngle[1]);
-	    this.rotateVectorZ(vector, -lightAngle[2]);
+	    rotateVectorX(vector, -lightAngle[0]);
+	    rotateVectorY(vector, -lightAngle[1]);
+	    rotateVectorZ(vector, -lightAngle[2]);
 	    
 	    // Store the location for later use
 	    this.lightLocation = vector;
@@ -336,9 +288,7 @@ ShadowOverlay = Class({
     this.glColorBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, this.glColorBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(glColors), gl.STATIC_DRAW);
-    this.glColorBuffer.itemSize = 4;
-    
-    ShadowOverlay.overlay = this; // TODO CHECK
+    this.glColorBuffer.itemSize = 4;      
   },
        
   /*

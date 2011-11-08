@@ -10,9 +10,9 @@ Light = Class({
    * Update the light source position, render a cube to show the position...
    */
   update: function(angle) {
-    this.location = vec3.create([     Math.sin(angle)       * 6, 
-                                 18 + Math.cos(angle * 0.5) * 4, 
-                                      Math.cos(angle * 0.8) * 9]);
+    this.location = vec3.create([     Math.sin(angle)       * 10, 
+                                 18 + Math.cos(angle * 0.5) * 10, 
+                                      Math.cos(angle * 0.8) * 10]);
             
     mvPushMatrix();
       // Move to the light position...
@@ -28,7 +28,7 @@ Light = Class({
       this.cube.render();
 
       // Set the light position, color and the ambient color...
-      gl.uniform3f(shaderProgram.lightingLocationUniform, mvMatrix[12], mvMatrix[13], mvMatrix[14]);            
+      gl.uniform3f(shaderProgram.lightingLocationUniform, mvMatrix[12], mvMatrix[10], mvMatrix[14]);            
       gl.uniform3f(shaderProgram.lightingColorUniform, 1, 1, 1);
       gl.uniform3f(shaderProgram.ambientColorUniform,  0.1, 0.1, 0.1);
     mvPopMatrix();
