@@ -1,0 +1,598 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"dra",
+				"drawScene"
+			],
+			[
+				"debu",
+				"debugMode"
+			],
+			[
+				"ren",
+				"render"
+			],
+			[
+				"font",
+				"font: font: size font"
+			],
+			[
+				"si",
+				"font-size"
+			],
+			[
+				"unse",
+				"unset"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "index.html",
+			"settings":
+			{
+				"buffer_size": 1402,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "init.js",
+			"settings":
+			{
+				"buffer_size": 4584,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"contents": "",
+			"settings":
+			{
+				"buffer_size": 0,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "libs/webgl-utils.js",
+			"settings":
+			{
+				"buffer_size": 5712,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "libs/gl-matrix.js",
+			"settings":
+			{
+				"buffer_size": 47883,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/D/School/PGR/khronos-webgl/sdk/demos/webkit/SpinningBox.html",
+			"settings":
+			{
+				"buffer_size": 9119,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/D/School/PGR/webgl-lessons/lesson11/index.html",
+			"settings":
+			{
+				"buffer_size": 15545,
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "",
+	"command_palette":
+	{
+		"height": 349.0,
+		"selected_items":
+		[
+			[
+				"packe",
+				"Package Control: Install Package"
+			],
+			[
+				"html",
+				"Set Syntax: HTML"
+			],
+			[
+				"smar",
+				"Set Syntax: Smarty"
+			],
+			[
+				"package",
+				"Package Control: Install Package"
+			],
+			[
+				"php",
+				"Set Syntax: PHP"
+			],
+			[
+				"Package Control: ",
+				"Package Control: List Packages"
+			],
+			[
+				"packe ins",
+				"Package Control: Install Package"
+			],
+			[
+				"",
+				"Package Control: Install Package"
+			],
+			[
+				"git log",
+				"Git: Log All"
+			],
+			[
+				"git pu",
+				"Git: Pull"
+			],
+			[
+				"git sta",
+				"Git: Status"
+			]
+		],
+		"width": 416.0
+	},
+	"console":
+	{
+		"height": 129.0
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/D/School/PGR/webgl-lessons/lesson11/webgl-utils.js",
+		"/D/School/PGR/3DT/3DT.sublime-project",
+		"/D/School/PGR/3DT/3DT.sublime-workspace",
+		"/D/Users/Enzy/AppData/Roaming/Sublime Text 2/Packages/Default/Base File.sublime-settings",
+		"/D/Users/Enzy/AppData/Roaming/Sublime Text 2/Packages/User/Base File.sublime-settings",
+		"/D/School/PGR/gl-matrix/gl-matrix.js",
+		"/D/School/PGR/3DT/webgl-utils.js",
+		"/D/School/PGR/3DT/glMatrix-0.9.5.min.js",
+		"/D/Program Files/Logitech/SetPointP/players.ini",
+		"/D/Work/Clevis/respekt-inovace-pro-spolecnost/app/templates/@layout.latte",
+		"/D/Work/Clevis/respekt-inovace-pro-spolecnost/app/bootstrap.php",
+		"/D/Work/Clevis/respekt-inovace-pro-spolecnost/app/config.neon",
+		"/D/Work/Clevis/respekt-inovace-pro-spolecnost/app/local.neon",
+		"/D/Users/Enzy/AppData/Roaming/Sublime Text 2/Packages/HTML/HTML.tmLanguage",
+		"/W/_resources/HTML/paulirish-html5-boilerplate-007754e/index.html",
+		"/D/Work/Clevis/respekt-inovace-pro-spolecnost/.htaccess",
+		"/W/Clevis/respekt-inovace-pro-spolecnost/app/templates/@layout.latte",
+		"/W/Clevis/respekt-inovace-pro-spolecnost/app/local.neon",
+		"/W/Clevis/respekt-inovace-pro-spolecnost/www/js/jquery.min.js",
+		"/D/School/PGR/3DT/init.js",
+		"/D/School/PGR/3DT/style.css",
+		"/D/School/PGR/3DT/index.html",
+		"/W/_resources/JavaScript/jquery-1.6.4.min.js",
+		"/D/School/PGR/3DT/index2.html",
+		"/D/School/PGR/3DT/3DP.sublime-project",
+		"/D/Users/Enzy/AppData/Roaming/Sublime Text 2/Packages/Default/Default (Windows).sublime-keymap",
+		"/D/Users/Enzy/AppData/Roaming/Sublime Text 2/Packages/ZenCoding/Default (Windows).sublime-keymap",
+		"/D/Users/Enzy/AppData/Roaming/Sublime Text 2/Packages/ZenCoding/README.creole",
+		"/D/Users/Enzy/AppData/Roaming/Sublime Text 2/Packages/ZenCoding/.hg_archival.txt",
+		"/W/Clevis/Ulicnik/www/css/layout.less",
+		"/W/Clevis/Ulicnik/templates/index.html",
+		"/W/Clevis/Ulicnik/www/css/screen.css",
+		"/W/Clevis/Ulicnik/www/js/main.js",
+		"/W/Osobni/sublime.txt",
+		"/D/Users/Enzy/AppData/Roaming/Sublime Text 2/Packages/ZenCoding/update_keymaps.bat",
+		"/D/Users/Enzy/AppData/Roaming/Sublime Text 2/Installed Packages/Package Control.sublime-package",
+		"/D/Users/Enzy/AppData/Roaming/Sublime Text 2/Packages/User/Default (Windows).sublime-keymap",
+		"/D/Users/Enzy/AppData/Roaming/Sublime Text 2/Packages/User/Global.sublime-settings",
+		"/D/Users/Enzy/AppData/Roaming/Sublime Text 2/Settings/Session.sublime_session",
+		"/W/Clevis/Ulicnik/templates/registrace2.html",
+		"/W/Clevis/Ulicnik/templates/uzivatelska_stranka.html",
+		"/W/Clevis/Ulicnik/templates/stranka_obce.html",
+		"/W/Clevis/Ulicnik/templates/registrace1.html",
+		"/D/Temp/scp44218/var/log/apache2/access_log.log",
+		"/W/Clevis/Ulicnik/tests/libs/PHPUnit/File/Iterator/Factory.php",
+		"/W/Clevis/Ulicnik/templates/uzivatelsky_profil.html",
+		"/W/Clevis/Ulicnik/templates/sprava_problemu.html",
+		"/W/Clevis/Ulicnik/.gitignore",
+		"/W/Clevis/Ulicnik/libs/Extras/jasir-RequestsPanel-4585659/RequestsPanel.php",
+		"/W/Clevis/Ulicnik/libs/Nette/Application/Link.php",
+		"/W/Clevis/Ulicnik/libs/Nette/Application/Presenter.php",
+		"/W/Clevis/Ulicnik/libs/Nette/tools/Object.php",
+		"/W/Clevis/Ulicnik/www/css/classes.less",
+		"/D/Users/Enzy/AppData/Roaming/Sublime Text 2/Packages/Prefixr/Default (Windows).sublime-keymap",
+		"/D/Users/Enzy/AppData/Roaming/Sublime Text 2/Packages/User/Git.sublime-settings",
+		"/D/Users/Enzy/AppData/Roaming/Sublime Text 2/Packages/Default/Global.sublime-settings",
+		"/W/Clevis/Ulicnik/www/css/style.less",
+		"/D/Users/Enzy/AppData/Roaming/Sublime Text 2/Packages/LESS/LESS.tmLanguage",
+		"/D/Users/Enzy/AppData/Roaming/Sublime Text 2/Packages/CSS/CSS.tmLanguage",
+		"/W/Clevis/Ulicnik/www/css/reset.less",
+		"/W/Clevis/Ulicnik/app/bootstrap.php",
+		"/W/Clevis/Ulicnik/app/model/AccessManagement/UserAuthenticator.php",
+		"/D/Users/Enzy/AppData/Roaming/Sublime Text 2/Settings/Auto Save Session.sublime_session",
+		"/W/Clevis/Eleda/app/components/AddToClassForm/default.latte",
+		"/W/Clevis/Eleda/app/components/FolderForm/default.latte",
+		"/D/Users/Enzy/AppData/Roaming/Sublime Text 2/Packages/User/JSON.sublime-settings",
+		"/D/Users/Enzy/AppData/Roaming/Sublime Text 2/User/Base File.sublime-settings",
+		"/W/Clevis/Eleda/app/AdminModule/Presenters/Admin_BasePresenter.php",
+		"/W/Clevis/Eleda/app/bootstrap.php",
+		"/W/Clevis/Eleda/app/.htaccess",
+		"/W/Clevis/Eleda/app/config.local.neon",
+		"/W/Clevis/Eleda/app/config.neon",
+		"/W/Clevis/Eleda/app/MMR.todolist",
+		"/W/Clevis/Eleda/app/web.config",
+		"/D/Users/Enzy/AppData/Roaming/Sublime Text 2/Packages/Default/Default (Linux).sublime-keymap"
+	],
+	"find":
+	{
+		"height": 32.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+			"W:\\Clevis\\Eleda\\app\\TeacherModule"
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"moonRotationMatrix",
+			"degToRad",
+			"mvPopMatrix",
+			"mvPushMatrix",
+			"<!--",
+			"mvMatrix",
+			"vertices",
+			"triangleVertexPositionBuffer",
+			"shaderProgram",
+			"triangleVertex",
+			"triangleVertexPositionBuffer",
+			"DT",
+			"\n",
+			"\"",
+			"\"\n\"",
+			",",
+			"\"command\": ",
+			"\"__doc__\":",
+			"\"profile_name\"",
+			"\"action\":",
+			"\"contents\"",
+			"\"args\": ",
+			"\"context\": [",
+			"context",
+			"{",
+			"},",
+			"  ",
+			"  \"context\": [",
+			"  \"args\": {},",
+			"  \"keys\": [",
+			"'",
+			"  \"",
+			"  },\n  \"",
+			"\"\n  ],\n  \"args\": {",
+			"\"\n  ],\n",
+			"{\n  \"keys\": [\n    \"",
+			"[{\n  \"keys\": [\n    \"",
+			"text2",
+			"class=\"text\"",
+			"text",
+			"class",
+			"header",
+			"hokusPus",
+			"class",
+			"item",
+			"event",
+			"Debug",
+			"private",
+			"@",
+			"Object",
+			"object",
+			"enhances",
+			"credentials",
+			"px",
+			"keyword.unit.css",
+			"px"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"\\\""
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 1,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "index.html",
+					"settings":
+					{
+						"buffer_size": 1402,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								624,
+								624
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 16.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "init.js",
+					"settings":
+					{
+						"buffer_size": 4584,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3879,
+								3879
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1902.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"settings":
+					{
+						"buffer_size": 0,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "libs/webgl-utils.js",
+					"settings":
+					{
+						"buffer_size": 5712,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2069,
+								2069
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "libs/gl-matrix.js",
+					"settings":
+					{
+						"buffer_size": 47883,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								102,
+								102
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "/D/School/PGR/khronos-webgl/sdk/demos/webkit/SpinningBox.html",
+					"settings":
+					{
+						"buffer_size": 9119,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 400.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "/D/School/PGR/webgl-lessons/lesson11/index.html",
+					"settings":
+					{
+						"buffer_size": 15545,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								6381,
+								7461
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 3216.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 0.0
+	},
+	"input":
+	{
+		"height": 29.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"replace":
+	{
+		"height": 60.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+			[
+				"object",
+				"libs/Nette/tools/Object.php"
+			],
+			[
+				"presenter",
+				"libs/Nette/Application/Presenter.php"
+			],
+			[
+				"",
+				"libs/Nette/Application/Link.php"
+			],
+			[
+				"baseprese",
+				"libs/Extras/jasir-RequestsPanel-4585659/RequestsPanel.php"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 500.0,
+		"selected_items":
+		[
+		],
+		"width": 380.0
+	},
+	"show_minimap": true,
+	"show_open_files": true,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 201.0,
+	"status_bar_visible": true
+}

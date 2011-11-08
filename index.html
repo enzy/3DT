@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+		<title>3DT - 3D Tetris in WebGL</title>
+		
+		<link rel="stylesheet" href="style.css">
+		
+		<!-- Libraris -->
+		<script type="text/javascript" src="libs/webgl-utils.js"></script><!-- Cross browser context setup and requestAnimationFrame -->		
+		<script type="text/javascript" src="libs/webgl-trace.js"></script><!-- A debugging utility for WebGL that records a trace of the WebGL calls made by an application -->		
+		<script type="text/javascript" src="libs/gl-matrix.js"></script><!-- High performance matrix and vector operations for WebGL -->
+		<script type="text/javascript" src="libs/sugar-1.1.min.js"></script><!-- Library for working with native objects -->
+		<!-- Other -->
+		<script type="text/javascript" src="utils.js"></script><!-- Usefull utilities -->
+		<script type="text/javascript" src="shapes.js"></script><!-- Usefull utilities -->
+		<script type="text/javascript" src="shadows.js"></script><!-- Usefull utilities -->
+		<script type="text/javascript" src="lights.js"></script><!-- Usefull utilities -->
+		<script type="text/javascript" src="textures.js"></script><!-- Usefull utilities -->
+	</head>
+	<body>				
+		<h1>3DT - 3D Tetris in WebGL</h1>
+		<canvas id="canvas" width="400" height="300"></canvas>
+
+		<script id="shader-vs" type="x-shader/x-vertex">
+		  attribute vec3 aVertexPosition;
+	    attribute vec3 aVertexNormal;
+	    attribute vec2 aTextureCoord;
+
+	    uniform mat4 uMVMatrix;
+	    uniform mat4 uPMatrix;
+	    uniform mat3 uNMatrix; // uNormalMatrix 
+
+	    // uniform vec3 uAmbientColor;
+	    // uniform vec3 uLightingDirection;
+	    // uniform vec3 uDirectionalColor;
+	    // uniform bool uUseLighting;
+
+	    varying vec2 vTextureCoord;
+	    varying vec3 vLightWeighting;
+
+	    void main(void) {
+        gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
+        vTextureCoord = aTextureCoord;
+        
+        // vLightWeighting = vec3(1.0, 1.0, 1.0);  No lighting
+        	
+      	highp vec3 ambientLight = vec3(0.1, 0.1, 0.1);  
+      	highp vec3 directionalLightColor = vec3(1, 1, 1);  
+      	highp vec3 directionalVector = vec3(1, 1, 1);  
+
+        vec3 transformedNormal = uNMatrix * aVertexNormal;
+
+        highp float directional = max(dot(transformedNormal.xyz, directionalVector), 0.0);  
+      	vLightWeighting = ambientLight + (directionalLightColor * directional);
+        
+	    }
+		</script>
+
+		<script id="shader-fs" type="x-shader/x-fragment">
+	    #ifdef GL_ES
+	    precision highp float;
+	    #endif
+
+	    varying vec2 vTextureCoord;
+	    varying vec3 vLightWeighting;
+
+	    uniform sampler2D uSampler;
+
+	    void main(void) {
+        vec4 textureColor = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t));
+        gl_FragColor = vec4(textureColor.rgb * vLightWeighting, textureColor.a);
+	    }
+		</script>
+
+		
+		
+		<script type="text/javascript" src="init.js"></script>
+	</body>
+</html>
