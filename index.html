@@ -2,7 +2,17 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+		
 		<title>3DT - 3D Tetris in WebGL</title>
+		<!-- 
+			Author: Matej Simek  | www.matejsimek.cz
+			Date:		9.11.2011
+
+			Sources:
+				Munshi - OpenGL® ES 2.0 Programming Guide
+				http://learningwebgl.com
+
+		-->
 		
 		<link rel="stylesheet" href="style.css">
 		
@@ -13,64 +23,92 @@
 		<script type="text/javascript" src="libs/sugar-1.1.min.js"></script><!-- Library for working with native objects -->
 		<!-- Other -->
 		<script type="text/javascript" src="utils.js"></script><!-- Usefull utilities -->
-		<script type="text/javascript" src="shapes.js"></script><!-- Usefull utilities -->
-		<script type="text/javascript" src="shadows.js"></script><!-- Usefull utilities -->
-		<script type="text/javascript" src="lights.js"></script><!-- Usefull utilities -->
-		<script type="text/javascript" src="textures.js"></script><!-- Usefull utilities -->
+		<script type="text/javascript" src="shapes.js"></script><!--  -->
+		<script type="text/javascript" src="shadows.js"></script><!--  -->
+		<script type="text/javascript" src="lights.js"></script><!--  -->
+		<script type="text/javascript" src="textures.js"></script><!--  -->
+		<script type="text/javascript" src="controls.js"></script><!--  -->
 	</head>
 	<body>				
 		<h1>3DT - 3D Tetris in WebGL</h1>
 		<canvas id="canvas" width="400" height="300"></canvas>
 
-		<script id="shader-vs" type="x-shader/x-vertex">
-		  attribute vec3 aVertexPosition;
-	    attribute vec3 aVertexNormal;
-	    attribute vec2 aTextureCoord;
+		<script id="shader-vs" type="x-shader/x-vertex">		  
+			attribute vec3 aVertexPosition;
+      attribute vec3 aVertexNormal;
+      attribute vec2 aTextureCoord;
 
-	    uniform mat4 uMVMatrix;
-	    uniform mat4 uPMatrix;
-	    uniform mat3 uNMatrix; // uNormalMatrix 
+      uniform mat4 uMVMatrix;
+      uniform mat4 uPMatrix;
+      uniform mat3 uNMatrix;
 
-	    // uniform vec3 uAmbientColor;
-	    // uniform vec3 uLightingDirection;
-	    // uniform vec3 uDirectionalColor;
-	    // uniform bool uUseLighting;
+      uniform vec3 uAmbientColor;
 
-	    varying vec2 vTextureCoord;
-	    varying vec3 vLightWeighting;
+      uniform vec3 uLightingLocation;
+      uniform vec3 uLightingColor;
 
-	    void main(void) {
-        gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
-        vTextureCoord = aTextureCoord;
-        
-        // vLightWeighting = vec3(1.0, 1.0, 1.0);  No lighting
-        	
-      	highp vec3 ambientLight = vec3(0.1, 0.1, 0.1);  
-      	highp vec3 directionalLightColor = vec3(1, 1, 1);  
-      	highp vec3 directionalVector = vec3(1, 1, 1);  
+      uniform bool uUseLighting;
+      uniform bool uUseColor;
 
-        vec3 transformedNormal = uNMatrix * aVertexNormal;
+      varying vec2 vTextureCoord;
+      varying vec3 vLightWeighting;
 
-        highp float directional = max(dot(transformedNormal.xyz, directionalVector), 0.0);  
-      	vLightWeighting = ambientLight + (directionalLightColor * directional);
-        
-	    }
+      varying vec4 vColor;
+
+      attribute vec4 aVertexColor;
+
+      void main(void) {
+        if (!uUseColor) {
+          vec4 mvPosition = uMVMatrix * vec4(aVertexPosition, 1.0);
+          gl_Position = uPMatrix * mvPosition;
+          vTextureCoord = aTextureCoord;
+
+          if (!uUseLighting) {
+            vLightWeighting = vec3(0.4, 0.4, 0.4);
+          }
+          else {
+            vec3 lightDirection = normalize(uLightingLocation - mvPosition.xyz);
+
+            vec3 transformedNormal = uNMatrix * aVertexNormal;
+            float directionalLightWeighting = max(dot(transformedNormal, lightDirection), 0.0);
+            vLightWeighting = uAmbientColor + uLightingColor * directionalLightWeighting;
+          }
+        }
+        else {
+          gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
+          vColor = aVertexColor;
+        }
+      }
 		</script>
 
 		<script id="shader-fs" type="x-shader/x-fragment">
 	    #ifdef GL_ES
-	    precision highp float;
-	    #endif
+      precision highp float;
+      #endif
 
-	    varying vec2 vTextureCoord;
-	    varying vec3 vLightWeighting;
+      varying vec2 vTextureCoord;
+      varying vec3 vLightWeighting;
+      varying vec4 vColor;
 
-	    uniform sampler2D uSampler;
+      uniform sampler2D uSampler;
+      uniform bool uUseLighting;
+      uniform bool uUseColor;
+      uniform float uAlpha;
 
-	    void main(void) {
-        vec4 textureColor = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t));
-        gl_FragColor = vec4(textureColor.rgb * vLightWeighting, textureColor.a);
-	    }
+      void main(void) {
+        if (!uUseColor) {
+          vec4 textureColor = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t));
+          if (!uUseLighting) {
+            gl_FragColor = vec4(textureColor.rgb, textureColor.a);
+          }
+          else {
+            gl_FragColor = vec4(textureColor.rgb * vLightWeighting, textureColor.a);
+          }
+        }
+        else {
+          gl_FragColor = vColor * uAlpha;
+        }
+      }
 		</script>
 
 		

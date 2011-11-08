@@ -114,28 +114,7 @@ function render() {
 
 }
 
-function mvPushMatrix() {
-    var copy = mat4.create();
-    mat4.set(mvMatrix, copy);
-    mvMatrixStack.push(copy);
-}
 
-function mvPopMatrix() {
-    if (mvMatrixStack.length == 0) {
-        throw "Invalid popMatrix!";
-    }
-    mvMatrix = mvMatrixStack.pop();
-}
-
-function setMatrixUniforms() {
-  gl.uniformMatrix4fv(shaderProgram.pMatrixUniform, false, pMatrix);
-  gl.uniformMatrix4fv(shaderProgram.mvMatrixUniform, false, mvMatrix);
-
-  var normalMatrix = mat3.create();
-  mat4.toInverseMat3(mvMatrix, normalMatrix);
-  mat3.transpose(normalMatrix);
-  gl.uniformMatrix3fv(shaderProgram.nMatrixUniform, false, normalMatrix);
-}
 
 /*
  * Initialize the shaders, so WebGL knows how to light our scene.
@@ -155,24 +134,32 @@ function initShaders() {
     alert("Unable to initialize the shader program.");
   }
   
-  gl.useProgram(shaderProgram);
+  gl.useProgram(shaderProgram);  
 
-  // Now the boring part
   shaderProgram.vertexPositionAttribute = gl.getAttribLocation(shaderProgram, "aVertexPosition");
   gl.enableVertexAttribArray(shaderProgram.vertexPositionAttribute);
+
   shaderProgram.textureCoordAttribute = gl.getAttribLocation(shaderProgram, "aTextureCoord");
   gl.enableVertexAttribArray(shaderProgram.textureCoordAttribute);
+
   shaderProgram.vertexNormalAttribute = gl.getAttribLocation(shaderProgram, "aVertexNormal");
   gl.enableVertexAttribArray(shaderProgram.vertexNormalAttribute);
+
+  shaderProgram.vertexColorAttribute = gl.getAttribLocation(shaderProgram, "aVertexColor");
+  gl.enableVertexAttribArray(shaderProgram.vertexColorAttribute);
 
   shaderProgram.pMatrixUniform = gl.getUniformLocation(shaderProgram, "uPMatrix");
   shaderProgram.mvMatrixUniform = gl.getUniformLocation(shaderProgram, "uMVMatrix");
   shaderProgram.nMatrixUniform = gl.getUniformLocation(shaderProgram, "uNMatrix");
   shaderProgram.samplerUniform = gl.getUniformLocation(shaderProgram, "uSampler");
-  // shaderProgram.useLightingUniform = gl.getUniformLocation(shaderProgram, "uUseLighting");
-  // shaderProgram.ambientColorUniform = gl.getUniformLocation(shaderProgram, "uAmbientColor");
-  // shaderProgram.lightingDirectionUniform = gl.getUniformLocation(shaderProgram, "uLightingDirection");
-  // shaderProgram.directionalColorUniform = gl.getUniformLocation(shaderProgram, "uDirectionalColor");
+
+  shaderProgram.useLightingUniform = gl.getUniformLocation(shaderProgram, "uUseLighting");
+  shaderProgram.useColorUniform = gl.getUniformLocation(shaderProgram, "uUseColor");
+
+  shaderProgram.alphaUniform = gl.getUniformLocation(shaderProgram, "uAlpha");
+  shaderProgram.ambientColorUniform = gl.getUniformLocation(shaderProgram, "uAmbientColor");
+  shaderProgram.lightingLocationUniform = gl.getUniformLocation(shaderProgram, "uLightingLocation");
+  shaderProgram.lightingColorUniform = gl.getUniformLocation(shaderProgram, "uLightingColor");
 }
 
 /*
@@ -226,148 +213,10 @@ function getShader(gl, id) {
 
 
 function initBuffers() {
-  /*var latitudeBands = 30;
-  var longitudeBands = 30;
-  var radius = 2;
-
-  var vertexPositionData = [];
-  var normalData = [];
-  var textureCoordData = [];
-  for (var latNumber=0; latNumber <= latitudeBands; latNumber++) {
-    var theta = latNumber * Math.PI / latitudeBands;
-    var sinTheta = Math.sin(theta);
-    var cosTheta = Math.cos(theta);
-
-    for (var longNumber=0; longNumber <= longitudeBands; longNumber++) {
-      var phi = longNumber * 2 * Math.PI / longitudeBands;
-      var sinPhi = Math.sin(phi);
-      var cosPhi = Math.cos(phi);
-
-      var x = cosPhi * sinTheta;
-      var y = cosTheta;
-      var z = sinPhi * sinTheta;
-      var u = 1 - (longNumber / longitudeBands);
-      var v = 1 - (latNumber / latitudeBands);
-
-      normalData.push(x);
-      normalData.push(y);
-      normalData.push(z);
-      textureCoordData.push(u);
-      textureCoordData.push(v);
-      vertexPositionData.push(radius * x);
-      vertexPositionData.push(radius * y);
-      vertexPositionData.push(radius * z);
-    }
-  }
-
-  var indexData = [];
-  for (var latNumber=0; latNumber < latitudeBands; latNumber++) {
-    for (var longNumber=0; longNumber < longitudeBands; longNumber++) {
-      var first = (latNumber * (longitudeBands + 1)) + longNumber;
-      var second = first + longitudeBands + 1;
-      indexData.push(first);
-      indexData.push(second);
-      indexData.push(first + 1);
-
-      indexData.push(second);
-      indexData.push(second + 1);
-      indexData.push(first + 1);
-    }
-  }
-
-  moonVertexNormalBuffer = gl.createBuffer();
-  gl.bindBuffer(gl.ARRAY_BUFFER, moonVertexNormalBuffer);
-  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(normalData), gl.STATIC_DRAW);
-  moonVertexNormalBuffer.itemSize = 3;
-  moonVertexNormalBuffer.numItems = normalData.length / 3;
-
-  moonVertexTextureCoordBuffer = gl.createBuffer();
-  gl.bindBuffer(gl.ARRAY_BUFFER, moonVertexTextureCoordBuffer);
-  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(textureCoordData), gl.STATIC_DRAW);
-  moonVertexTextureCoordBuffer.itemSize = 2;
-  moonVertexTextureCoordBuffer.numItems = textureCoordData.length / 2;
-
-  moonVertexPositionBuffer = gl.createBuffer();
-  gl.bindBuffer(gl.ARRAY_BUFFER, moonVertexPositionBuffer);
-  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertexPositionData), gl.STATIC_DRAW);
-  moonVertexPositionBuffer.itemSize = 3;
-  moonVertexPositionBuffer.numItems = vertexPositionData.length / 3;
-
-  moonVertexIndexBuffer = gl.createBuffer();
-  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, moonVertexIndexBuffer);
-  gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indexData), gl.STATIC_DRAW);
-  moonVertexIndexBuffer.itemSize = 1;
-  moonVertexIndexBuffer.numItems = indexData.length;*/
-
   
-}
 
 
-/*
- * Load and return texture object
- */
-function initTexture(texturePath) {  
-  var texture = gl.createTexture();
-  texture.image = new Image();
-  texture.image.onload = function () {
-      handleLoadedTexture(texture)
-  }
-  texture.image.src = texturePath;
-
-  return texture;
-}
-
-/*
- * Textures handling
- */
-function handleLoadedTexture(texture) {
-  gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
-  gl.bindTexture(gl.TEXTURE_2D, texture);
-  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, texture.image);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_NEAREST);
-  gl.generateMipmap(gl.TEXTURE_2D);
-
-  gl.bindTexture(gl.TEXTURE_2D, null);
 }
 
 
 
-/*
- * Converts degrees to radians
- */
-function degToRad(degrees) {
-  return degrees * Math.PI / 180;
-}
-
-/*
- * Mouse move handling for free mouse camera
- */
-function handleMouseDown(event) {
-  mouseDown = true;
-  lastMouseX = event.clientX;
-  lastMouseY = event.clientY;
-}
-function handleMouseUp(event) {
-  mouseDown = false;
-}
-function handleMouseMove(event) {
-  if (!mouseDown) {
-    return;
-  }
-  var newX = event.clientX;
-  var newY = event.clientY;
-
-  var deltaX = newX - lastMouseX
-  var newRotationMatrix = mat4.create();
-  mat4.identity(newRotationMatrix);
-  mat4.rotate(newRotationMatrix, degToRad(deltaX / 10), [0, 1, 0]);
-
-  var deltaY = newY - lastMouseY;
-  mat4.rotate(newRotationMatrix, degToRad(deltaY / 10), [1, 0, 0]);
-
-  mat4.multiply(newRotationMatrix, sceneRotationMatrix, sceneRotationMatrix);
-
-  lastMouseX = newX
-  lastMouseY = newY;
-}
