@@ -3,7 +3,7 @@
 Light = Class({
   initialize: function() {
     // Create a small cube to show the light position...
-    this.cube = new Cube(0.2, 0.2, 0.2, createTexture('#FFFFFF', '#FFDD00'));
+    this.cube = new Cube(0.2, 0.2, 0.2, new Texture('#FFDD00', '#FFDD00'));
   },
       
   /*
@@ -29,8 +29,8 @@ Light = Class({
 
       // Set the light position, color and the ambient color...
       gl.uniform3f(shaderProgram.lightingLocationUniform, mvMatrix[12], mvMatrix[13], mvMatrix[14]);            
-      gl.uniform3f(shaderProgram.lightingColorUniform, 0.5, 0.5, 0.5);
-      gl.uniform3f(shaderProgram.ambientColorUniform,  0.5, 0.5, 0.5);
+      gl.uniform3f(shaderProgram.lightingColorUniform, 1, 1, 1);
+      gl.uniform3f(shaderProgram.ambientColorUniform,  0.1, 0.1, 0.1);
     mvPopMatrix();
   }
        

@@ -12,7 +12,7 @@ var debugMode = false;
 // Canvas element
 var canvas = document.getElementById("canvas");  
 // Setup a WebGL context
-gl = WebGLUtils.setupWebGL(canvas, {antialias:true});
+gl = WebGLUtils.setupWebGL(canvas);
 
 // Continue only with working context
 if(gl){
@@ -22,7 +22,7 @@ if(gl){
     gl = WebGLDebugUtils.makeDebugContext(gl);
     gl.setTracing(true); // Enable tracing
   }
-
+  
   gl.viewportWidth = canvas.width;
   gl.viewportHeight = canvas.height;
 
@@ -37,24 +37,15 @@ if(gl){
   initShaders();
     
   // Here's where we call the routine that builds all the objects
-  // we'll be drawing.  
-  var moonVertexPositionBuffer;
-  var moonVertexNormalBuffer;
-  var moonVertexTextureCoordBuffer;
-  var moonVertexIndexBuffer;
-  initBuffers();
-  
-  // Textures initialization
-  var moonTexture = initTexture("moon.gif");
+  // we'll be drawing.      
 
 
   /*
    * Global initialization
-   */
-
-  var mouseDown = false;
-  var lastMouseX = null;
-  var lastMouseY = null;
+   */  
+  var mvMatrix = mat4.create();
+  var mvMatrixStack = [];
+  var pMatrix = mat4.create();
 
   canvas.onmousedown = handleMouseDown;
   document.onmouseup = handleMouseUp;
@@ -63,12 +54,13 @@ if(gl){
   var sceneRotationMatrix = mat4.create();
   mat4.identity(sceneRotationMatrix);
 
-  var mvMatrix = mat4.create();
-  var mvMatrixStack = [];
-  var pMatrix = mat4.create();
-  
+  var lastTime = 0;  
+
+  // Start new game!
+  var currentGame = new Game();
+
   // Catch object state for debug purpose
-  if(debugMode) console.log(gl);
+  if(debugMode) console.log(gl);  
 
   // Proceed to render cycle
   render();
@@ -79,41 +71,30 @@ if(gl){
 
 // Render function that draw scene on animationFrame event
 function render() {
-  window.requestAnimFrame(render, canvas); // loop
-  
+  window.requestAnimFrame(render, canvas); // loop  
 
-  //gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
-  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
-  mat4.perspective(45, gl.viewportWidth / gl.viewportHeight, 0.1, 100.0, pMatrix);
-
-  // Decide to use directional lighting and pass it to shader
-  // var lighting = true;
-  // gl.uniform1i(shaderProgram.useLightingUniform, lighting);  
-
-  mat4.identity(mvMatrix);
-  mat4.translate(mvMatrix, [0, 0, -6]);
-  mat4.multiply(mvMatrix, sceneRotationMatrix);
-
-  gl.activeTexture(gl.TEXTURE0);
-  gl.bindTexture(gl.TEXTURE_2D, moonTexture);
-  gl.uniform1i(shaderProgram.samplerUniform, 0);
-
-  gl.bindBuffer(gl.ARRAY_BUFFER, moonVertexPositionBuffer);
-  gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, moonVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
-
-  gl.bindBuffer(gl.ARRAY_BUFFER, moonVertexTextureCoordBuffer);
-  gl.vertexAttribPointer(shaderProgram.textureCoordAttribute, moonVertexTextureCoordBuffer.itemSize, gl.FLOAT, false, 0, 0);
-
-  gl.bindBuffer(gl.ARRAY_BUFFER, moonVertexNormalBuffer);
-  gl.vertexAttribPointer(shaderProgram.vertexNormalAttribute, moonVertexNormalBuffer.itemSize, gl.FLOAT, false, 0, 0);
-
-  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, moonVertexIndexBuffer);
-  setMatrixUniforms();
-  gl.drawElements(gl.TRIANGLES, moonVertexIndexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
-
+  currentGame.render();
+  animate();
 }
 
+function animate() {
+  var timeNow = new Date().getTime();
+  if (lastTime != 0) {
+      currentGame.update(timeNow - lastTime);
+  }
+  lastTime = timeNow;
+}
+
+function setMatrixUniforms() {
+  gl.uniformMatrix4fv(shaderProgram.pMatrixUniform, false, pMatrix);
+  gl.uniformMatrix4fv(shaderProgram.mvMatrixUniform, false, mvMatrix);
+  gl.uniformMatrix4fv(shaderProgram.nSceneUniform, false, sceneRotationMatrix);
+
+  var normalMatrix = mat3.create();
+  mat4.toInverseMat3(mvMatrix, normalMatrix);
+  mat3.transpose(normalMatrix);
+  gl.uniformMatrix3fv(shaderProgram.nMatrixUniform, false, normalMatrix);
+}
 
 
 /*
@@ -151,6 +132,7 @@ function initShaders() {
   shaderProgram.pMatrixUniform = gl.getUniformLocation(shaderProgram, "uPMatrix");
   shaderProgram.mvMatrixUniform = gl.getUniformLocation(shaderProgram, "uMVMatrix");
   shaderProgram.nMatrixUniform = gl.getUniformLocation(shaderProgram, "uNMatrix");
+  shaderProgram.nSceneUniform = gl.getUniformLocation(shaderProgram, "uSceneMatrix");
   shaderProgram.samplerUniform = gl.getUniformLocation(shaderProgram, "uSampler");
 
   shaderProgram.useLightingUniform = gl.getUniformLocation(shaderProgram, "uUseLighting");
@@ -209,13 +191,6 @@ function getShader(gl, id) {
   }
   
   return shader;
-}
-
-
-function initBuffers() {
-  
-
-
 }
 
 

@@ -1,6 +1,11 @@
 /*
  * Mouse move handling for free mouse camera
  */
+
+var mouseDown = false;
+var lastMouseX = null;
+var lastMouseY = null;
+
 function handleMouseDown(event) {
   mouseDown = true;
   lastMouseX = event.clientX;

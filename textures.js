@@ -1,8 +1,10 @@
 /*
  * Simple generated texture
  */
-Texture = Class() {
+Texture = Class({
     initialize: function(color1, color2) {
+        this.txtr;
+
         var canvas  = document.createElement('canvas'),
             context = canvas.getContext('2d'),
             texture;
@@ -25,8 +27,12 @@ Texture = Class() {
         gl.generateMipmap(gl.TEXTURE_2D);
 
         gl.bindTexture(gl.TEXTURE_2D, null);
+        
+        this.txtr = texture;        
+    },
 
-        return texture;
+    get: function() {
+        return this.txtr;
     }
 
 });

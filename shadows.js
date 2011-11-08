@@ -314,12 +314,7 @@ ShadowOverlay = Class({
 	/*
    * Constructor
    */
-  initialize: function() {
-  	// Singleton alternative
-  	if (ShadowOverlay.overlay !== undefined) {
-        return ShadowOverlay.overlay;
-    }
-
+  initialize: function() {  	
 		// Create buffers for an overlay
     var size       = 0.5,
         glVertices = [-size, -size, 0,     size, -size, 0,     size, size, 0,    -size, size, 0],

@@ -6,7 +6,7 @@ Shape = Class({
      * Constructor
      */
     initialize: function(texture) {
-        this.texture              =  texture;
+        this.texture              =  texture.get();
 
         this.glVertexCount        = -1;    // The active vertex index
         this.glVertices           =  [];   // Vertex position list for gl
@@ -72,7 +72,7 @@ Shape = Class({
     /*
      * Add a line. Check if the line is also used by an other polygon. Returns the index of the line.
      */
-    addLine: function() {
+    addLine: function(v1, v2) {
         this.lines.push({v1:v1, v2:v2});
 
         return this.lines.length - 1;  

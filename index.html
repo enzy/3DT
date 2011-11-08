@@ -27,11 +27,13 @@
 		<script type="text/javascript" src="shadows.js"></script><!--  -->
 		<script type="text/javascript" src="lights.js"></script><!--  -->
 		<script type="text/javascript" src="textures.js"></script><!--  -->
-		<script type="text/javascript" src="controls.js"></script><!--  -->
+		<script type="text/javascript" src="controls.js"></script><!--  -->		
+		<!-- Game scene and logic -->
+		<script type="text/javascript" src="game.js"></script>
 	</head>
 	<body>				
 		<h1>3DT - 3D Tetris in WebGL</h1>
-		<canvas id="canvas" width="400" height="300"></canvas>
+		<canvas id="canvas" width="640" height="480"></canvas>
 
 		<script id="shader-vs" type="x-shader/x-vertex">		  
 			attribute vec3 aVertexPosition;
@@ -41,6 +43,7 @@
       uniform mat4 uMVMatrix;
       uniform mat4 uPMatrix;
       uniform mat3 uNMatrix;
+      uniform mat4 uSceneMatrix;
 
       uniform vec3 uAmbientColor;
 
@@ -59,14 +62,14 @@
 
       void main(void) {
         if (!uUseColor) {
-          vec4 mvPosition = uMVMatrix * vec4(aVertexPosition, 1.0);
-          gl_Position = uPMatrix * mvPosition;
+          vec4 mvPosition = uMVMatrix  * vec4(aVertexPosition, 1.0);
+          gl_Position = uPMatrix * uSceneMatrix * mvPosition;
           vTextureCoord = aTextureCoord;
 
           if (!uUseLighting) {
             vLightWeighting = vec3(0.4, 0.4, 0.4);
           }
-          else {
+          else {            
             vec3 lightDirection = normalize(uLightingLocation - mvPosition.xyz);
 
             vec3 transformedNormal = uNMatrix * aVertexNormal;

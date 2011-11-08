@@ -1,4 +1,5 @@
 {
+	"default_line_ending": "unix",
 	"folders":
 	[
 		{
@@ -9,7 +10,9 @@
 		},
 		{
 			"path": "/D/School/PGR/webgl-lessons"
+		},
+		{
+			"path": "/D/School/PGR/demo_package-Shadows"
 		}
-	],
-	"default_line_ending": "unix"
+	]
 }
