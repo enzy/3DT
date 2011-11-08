@@ -156,3 +156,8 @@ function rotateVectorZ(vector, angle) {
   vector[0] = x * cos - y * sin;
   vector[1] = x * sin + y * cos;
 }
+
+function getRand(min, max) {
+  var rand = Math.floor(Math.random() * max) + min;  
+  return rand;
+}

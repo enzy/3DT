@@ -1,3 +1,6 @@
+/*
+ * Game scene and logic
+ */
 Game = Class({
 	initialize: function() {
     this.shapes         = [];
@@ -7,33 +10,39 @@ Game = Class({
     this.light          = new Light();
     this.ShadowOverlay	= new ShadowOverlay();
 
-    // Create a floor...
+    // Create a floor
     this.addShape(new Cube(16, 0.1, 16, new Texture('#00AA00', '#FFFFFF')), false);
 
-    // Create the rotating objects with colors...
+    // Create the rotating objects with colors
     this.addShape(new Cube   (10, 1, 1, new Texture('#FF0000', '#FF0000')), true);    
     
-    // Create the objects on the floor in black and white...
+    // Create the objects on the floor in black and white
     this.addShape(new Cube   (8, 2, 2, new Texture('#0000FF', '#0000FF')), true);
+    this.addShape(new Cube   (getRand(0,5), getRand(0,5), getRand(0,5), new Texture('#00AAAA', '#00AAAA')), true);
     this.addShape(new Pyramid(2, 2, 2, new Texture('#00FF00', '#00FF00')), true);
     
     var sC = 0;
-    // Create an instance of the floor...
+    // Create an instance of the floor
     this.shapeInstances.push({shape:sC++, location:[ 0, -8,  0], angle:[0, 0, 0]});
     
-    // Create instances of the rotating objects...
+    // Create instances of the rotating objects
     this.shapeInstances.push({shape:sC++, location:[-4,  5,  0], angle:[0, 0, 0]});    
     
-    // Create instances for the objects on the floor...
+    // Create instances for the objects on the floor        
     this.shapeInstances.push({shape:sC, location:[-8, -6,  8], angle:[0, 0, 0]});
     this.shapeInstances.push({shape:sC++, location:[ 8, -6, -8], angle:[0, 1.55, 0]});
 
-    this.shapeInstances.push({shape:sC, location:[0, -6, 0], angle:[0, 0, 0]});
+    for (var i = 0; i < getRand(5,30); i++) {
+      this.shapeInstances.push({shape:sC, location:[getRand(-20,80), getRand(-20,80), getRand(-20,40)], angle:[getRand(0,1), getRand(0,1), getRand(0,1)]});
+    }
+      
+
+    this.shapeInstances.push({shape:++sC, location:[0, -6, 0], angle:[0, 0, 0]});
     
 	},
 
 	/*
-   * Add a shape to the list, check if a shadow builder is needed...
+   * Add a shape to the list, check if a shadow builder is needed
    */
   addShape: function(shape, shadow) {
       shape.shadow = shadow ? new ShadowBuilder(shape) : null;
@@ -42,7 +51,7 @@ Game = Class({
   },
 
   /*
-   * Update the matrix for the given shape instance...
+   * Update the matrix for the given shape instance
    */
   applyShapeInstance: function(shapeInstance) {
     mat4.translate(mvMatrix, shapeInstance.location);
@@ -58,7 +67,7 @@ Game = Class({
   },
 
   /**
-   * Render all objects and their shadows...
+   * Render all objects and their shadows
   **/
   render: function() {
     var shapeInstances = this.shapeInstances,
@@ -82,7 +91,7 @@ Game = Class({
     
     gl.uniform1i(shaderProgram.useLightingUniform, 1);
     
-    // Render all objects...
+    // Render all objects
     i = shapeInstances.length;
     while (i) {
         i--;
@@ -93,7 +102,7 @@ Game = Class({
         mvPopMatrix();
     }
 
-    // Render all shadows...
+    // Render all shadows
     i = shapeInstances.length;
     while (i) {
         i--;
@@ -109,12 +118,12 @@ Game = Class({
         }
     }
 
-    // Render the overlay to make the shadow areas darker...
+    // Render the overlay to make the shadow areas darker
     this.ShadowOverlay.render();
   },
 
   /*
-   * Update angles...
+   * Update angles (for now)
    */
   update: function(elapsed) {
       var shapeInstances = this.shapeInstances;
@@ -123,10 +132,7 @@ Game = Class({
       this.shadowAngle += 0.001 * elapsed;
       
       shapeInstances[1].angle[1] += 0.0006 * elapsed;
-      shapeInstances[1].angle[2] += 0.0005 * elapsed;        
-      // shapeInstances[2].angle[1] -= 0.0004 * elapsed;
-      // shapeInstances[3].angle[0] += 0.0003 * elapsed;
-      // shapeInstances[3].angle[1] -= 0.0005 * elapsed;                    
+      shapeInstances[1].angle[2] += 0.0005 * elapsed;              
   }
 
 

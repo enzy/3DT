@@ -79,34 +79,34 @@ ShadowBuilder = Class({
 
 	    i = triangles.length;
 	    while (i) {
-	        i--;
-	        
-	        triangle = triangles[i];
-	        if (triangle.visible) {
-	            j = 3;
-	            while (j) {
-	                j--;
-	                
-	                // Check if the side
-	                k    = triangle.lines[j];
-	                line = lines[k];
-	                a    = line.v1 + '_' + line.v2;
-	                b    = line.v2 + '_' + line.v1;
-	                
-	                if (lineSidesHash[a] !== undefined) { // Check the v1 -> v2 direction
-	                    // The side already exists, remove it
-	                    delete(lineSidesHash[a]);
-	                }
-	                else if (lineSidesHash[b] !== undefined) { // Check the v2 -> v1 direction
-	                    // The side already exists, remove it
-	                    delete(lineSidesHash[b]);
-	                }
-	                else {
-	                    // It's a new side, add it to the list
-	                    lineSidesHash[a] = k;
-	                }
-	            }
-	        }
+        i--;
+        
+        triangle = triangles[i];
+        if (triangle.visible) {
+          j = 3;
+          while (j) {
+            j--;
+            
+            // Check if the side
+            k    = triangle.lines[j];
+            line = lines[k];
+            a    = line.v1 + '_' + line.v2;
+            b    = line.v2 + '_' + line.v1;
+            
+            if (lineSidesHash[a] !== undefined) { // Check the v1 -> v2 direction
+              // The side already exists, remove it
+              delete(lineSidesHash[a]);
+            }
+            else if (lineSidesHash[b] !== undefined) { // Check the v2 -> v1 direction
+              // The side already exists, remove it
+              delete(lineSidesHash[b]);
+            }
+            else {
+              // It's a new side, add it to the list
+              lineSidesHash[a] = k;
+            }
+          }
+        }
 	    }
 
 	    // Convert the hash map to an array
