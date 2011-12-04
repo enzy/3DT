@@ -33,7 +33,7 @@ Shape = Class({
      */
     addVextex: function(x, y, z) {
         var hash  = ~~(x * 1000) + '_' + ~~(y * 1000) + '_' + ~~(z * 1000),
-            index = this.verticesHash[hash]; // Check if the value was added before
+        index = this.verticesHash[hash]; // Check if the value was added before
 
         if (index === undefined) { // A new vertex
             index                   = this.vertices.length;
@@ -73,7 +73,10 @@ Shape = Class({
      * Add a line. Check if the line is also used by an other polygon. Returns the index of the line.
      */
     addLine: function(v1, v2) {
-        this.lines.push({v1:v1, v2:v2});
+        this.lines.push({
+            v1:v1, 
+            v2:v2
+        });
 
         return this.lines.length - 1;  
     },
@@ -82,13 +85,13 @@ Shape = Class({
      * Add a triangle to this object. Adds the vertex information to the buffers needed the build the shadow.
      */
     addTriangle: function(x1, y1, z1, uu1, vv1,
-                          x2, y2, z2, uu2, vv2,
-                          x3, y3, z3, uu3, vv3) {
+        x2, y2, z2, uu2, vv2,
+        x3, y3, z3, uu3, vv3) {
         var vertex1, vertex2, vertex3,
-            line1, line2, line3,
-            vector1, vector2, vector3,
-            triangleCount = this.triangles.length, // The index of the new triangle
-            center;
+        line1, line2, line3,
+        vector1, vector2, vector3,
+        triangleCount = this.triangles.length, // The index of the new triangle
+        center;
 
         // Add the vertices
         vertex1 = this.addVextex(x1, y1, z1);
@@ -118,11 +121,13 @@ Shape = Class({
 
         // Add a new triangle
         // The center is needed to caculate the direction of the triangle to the light source.
-        this.triangles.push({vertices : [vertex1, vertex2, vertex3],
-                             lines    : [line1, line2, line3],
-                             normal   : vector3,
-                             center   : [(x1 + x2 + x3) / 3, (y1 + y2 + y3) / 3, (z1 + z2 + z3) / 3],
-                             visible  : false});                        
+        this.triangles.push({
+            vertices : [vertex1, vertex2, vertex3],
+            lines    : [line1, line2, line3],
+            normal   : vector3,
+            center   : [(x1 + x2 + x3) / 3, (y1 + y2 + y3) / 3, (z1 + z2 + z3) / 3],
+            visible  : false
+        });                        
     },
 
     /*
@@ -181,10 +186,10 @@ Shape = Class({
         // Set the texture
         gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, this.texture);
-        gl.uniform1i(shaderProgram.samplerUniform, 0);
+        gl.uniform1i(shaderProgram.uSampler, 0);
 
         // Don't use the color attribute
-        gl.uniform1i(shaderProgram.useColorUniform, 0);
+        gl.uniform1i(shaderProgram.uUseColor, 0);
 
         // Set the index, render the triangles
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.glVertexIndexBuffer);
@@ -260,19 +265,20 @@ Star = Class(Shape, {
         Shape.initialize.call(this, texture); // Call super contructor
 
         var step  = degToRad(360 / 5),
-            start = degToRad(360 / 10),
-            x1, y1,
-            x2, y2,
-            x3, y3;
+        start = degToRad(360 / 10),
+        x1, y1,
+        x2, y2,
+        x3, y3;
             
-        for (i = 0; i < 5; i++) {
-            x1 = Math.sin(start +  i        * step) * sizeX * 0.5;
-            y1 = Math.cos(start +  i        * step) * sizeY * 0.5;
-            x2 = Math.sin(start + (i + 1)   * step) * sizeX * 0.5;
-            y2 = Math.cos(start + (i + 1)   * step) * sizeY * 0.5;
+        for (var i = 0; i < 5; i++) {
+            x1 = Math.sin(start +  i * step) * sizeX * 0.5;
+            y1 = Math.cos(start +  i * step) * sizeY * 0.5;
+            x2 = Math.sin(start + (i + 1) * step) * sizeX * 0.5;
+            y2 = Math.cos(start + (i + 1) * step) * sizeY * 0.5;
             x3 = Math.sin(start + (i + 0.5) * step) * sizeX;
             y3 = Math.cos(start + (i + 0.5) * step) * sizeY;
-
+            
+            var u1, v1, u2, v2, u3, v3;
             u1 = (x1 + sizeX) / (sizeX * 2);
             v1 = (y1 + sizeY) / (sizeY * 2);
             u2 = (x2 + sizeX) / (sizeX * 2);
@@ -280,26 +286,12 @@ Star = Class(Shape, {
             u3 = (x3 + sizeX) / (sizeX * 2);
             v3 = (y3 + sizeY) / (sizeY * 2);
             
-            this.addTriangle(x1, y1, -sizeZ, u1,v1,
-                             x2, y2, -sizeZ, u2,v2,
-                             0,  0,  -sizeZ, u3,v3);
-            this.addTriangle(x2, y2, -sizeZ, u2,v2,
-                             x1, y1, -sizeZ, u1,v1,
-                             x3, y3,  0,     u3,v3);
-            
-            this.addTriangle(x2, y2,  sizeZ, u2,v2,
-                             x1, y1,  sizeZ, u1,v1,
-                             0,  0,   sizeZ, 0.5,0.5);
-            this.addTriangle(x1, y1,  sizeZ, u1,v1,
-                             x2, y2,  sizeZ, u2,v2,
-                             x3, y3,  0,     u3,v3);
-                             
-            this.addTriangle(x1, y1, -sizeZ, u1,v1,
-                             x1, y1,  sizeZ, u1,v1,
-                             x3, y3,  0,     u3,v3);
-            this.addTriangle(x2, y2,  sizeZ, u2,v2,
-                             x2, y2, -sizeZ, u2,v2,
-                             x3, y3,  0,     u3,v3);
+            this.addTriangle(x1, y1, -sizeZ, u1, v1, x2, y2, -sizeZ, u2, v2, 0, 0, -sizeZ, u3, v3);
+            this.addTriangle(x2, y2, -sizeZ, u2, v2, x1, y1, -sizeZ, u1, v1, x3, y3, 0, u3, v3);            
+            this.addTriangle(x2, y2, sizeZ, u2, v2, x1, y1, sizeZ, u1,v1,0, 0, sizeZ, 0.5, 0.5);
+            this.addTriangle(x1, y1, sizeZ, u1, v1, x2, y2, sizeZ, u2,v2, x3, y3, 0, u3, v3);                             
+            this.addTriangle(x1, y1, -sizeZ, u1, v1, x1, y1, sizeZ, u1, v1, x3, y3, 0, u3, v3);
+            this.addTriangle(x2, y2, sizeZ, u2, v2, x2, y2, -sizeZ, u2, v2 ,x3, y3,  0, u3, v3);
         }
 
         this.createBuffers();

@@ -4,6 +4,18 @@
 		"selected_items":
 		[
 			[
+				"shader",
+				"shader"
+			],
+			[
+				"get",
+				"getRand"
+			],
+			[
+				"for",
+				"for: for (…) {…} (Improved Native For-Loop)"
+			],
+			[
 				"S",
 				"ShadowOverlay"
 			],
@@ -55,23 +67,7 @@
 			"file": "init.js",
 			"settings":
 			{
-				"buffer_size": 6172,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "index.html",
-			"settings":
-			{
-				"buffer_size": 3751,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "game.js",
-			"settings":
-			{
-				"buffer_size": 4279,
+				"buffer_size": 7954,
 				"line_ending": "Unix"
 			}
 		},
@@ -79,31 +75,7 @@
 			"file": "lights.js",
 			"settings":
 			{
-				"buffer_size": 1238,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "controls.js",
-			"settings":
-			{
-				"buffer_size": 824,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "utils.js",
-			"settings":
-			{
-				"buffer_size": 3204,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "shadows.js",
-			"settings":
-			{
-				"buffer_size": 11678,
+				"buffer_size": 1209,
 				"line_ending": "Unix"
 			}
 		},
@@ -111,24 +83,96 @@
 			"file": "shapes.js",
 			"settings":
 			{
-				"buffer_size": 12440,
+				"buffer_size": 12018,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "game.js",
+			"settings":
+			{
+				"buffer_size": 4073,
 				"line_ending": "Unix"
 			}
 		}
 	],
-	"build_system": "",
+	"build_system": "Packages/Nodejs/Nodejs.sublime-build",
 	"command_palette":
 	{
-		"height": 55.0,
+		"height": 392.0,
 		"selected_items":
 		[
 			[
-				"word",
-				"Word Wrap: Toggle"
+				"list packe",
+				"Package Control: List Packages"
+			],
+			[
+				"disco",
+				"Package Control: Discover Packages"
 			],
 			[
 				"packe",
+				"Package Control: Discover Packages"
+			],
+			[
+				"insta",
 				"Package Control: Install Package"
+			],
+			[
+				"add re",
+				"Package Control: Add Repository"
+			],
+			[
+				"instal",
+				"Package Control: Install Package"
+			],
+			[
+				"list pa",
+				"Package Control: List Packages"
+			],
+			[
+				"list pak",
+				"Package Control: List Packages"
+			],
+			[
+				"list packa",
+				"Package Control: List Packages"
+			],
+			[
+				"package",
+				"Package Control: List Packages"
+			],
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"add repo",
+				"Package Control: Add Repository"
+			],
+			[
+				"packa",
+				"Package Control: Install Package"
+			],
+			[
+				"javasc",
+				"Set Syntax: JavaScript"
+			],
+			[
+				"c++",
+				"Set Syntax: C++"
+			],
+			[
+				"pack",
+				"Package Control: Add Repository"
+			],
+			[
+				"java",
+				"Set Syntax: JavaScript"
+			],
+			[
+				"word",
+				"Word Wrap: Toggle"
 			],
 			[
 				"html",
@@ -137,10 +181,6 @@
 			[
 				"smar",
 				"Set Syntax: Smarty"
-			],
-			[
-				"package",
-				"Package Control: Install Package"
 			],
 			[
 				"php",
@@ -171,7 +211,7 @@
 				"Git: Status"
 			]
 		],
-		"width": 416.0
+		"width": 400.0
 	},
 	"console":
 	{
@@ -188,20 +228,57 @@
 	},
 	"file_history":
 	[
-		"/D/School/PGR/webgl-lessons/lesson11/index.html",
-		"/D/School/PGR/3DT/README.md",
-		"/D/School/PGR/demo_package-Shadows/stencilShadowDemo.js",
-		"/D/School/PGR/demo_package-Shadows/index.html",
-		"/D/School/PGR/3DT/utils.js",
-		"/D/School/PGR/3DT/controls.js",
-		"/D/School/PGR/magi/src/util.js",
-		"/D/School/PGR/3DT/game.js",
+		"/C/School/PGR/3DT/3DT.sublime-workspace",
+		"/C/School/PGR/3DT/init.js",
+		"/C/School/PGR/3DT/shader.vert",
+		"/C/School/PGR/3DT/shader.frag",
+		"/C/Users/Enzy/AppData/Roaming/Sublime Text 2/Packages/SublimeREPL/Default (Windows).sublime-keymap",
+		"/C/Users/Enzy/AppData/Roaming/Sublime Text 2/Packages/SublimeREPL/Main.sublime-menu",
+		"/C/Users/Enzy/AppData/Roaming/Sublime Text 2/Packages/SublimeREPL/package-metadata.json",
+		"/C/Virtual/xampp/apache/conf/httpd.conf",
+		"/C/School/PGR/3DT/index.html",
+		"/C/School/PGR/3DT/shapes.js",
+		"/C/School/PGR/3DT/textures.js",
+		"/C/School/PGR/3DT/lights.js",
+		"/C/School/PGR/3DT/game.js",
+		"/D/Downloads/Pimsleur Courses - 35+ Languages (Audio).txt",
+		"/C/School/PGR/3DT/libs/gl-matrix.js",
+		"/C/Users/Enzy/AppData/Local/Temp/7zO75E3.tmp/README.txt",
+		"/C/Users/Enzy/AppData/Roaming/Sublime Text 2/Packages/JSDocs/Base File.sublime-settings",
+		"/C/Users/Enzy/AppData/Roaming/Sublime Text 2/Packages/GLSL.tmbundle/package-metadata.json",
+		"/C/School/PGR/CV10/index.html",
+		"/C/School/PGR/CV10/main.js",
+		"/C/School/PGR/CV10/glUtils.js",
+		"/C/Users/Enzy/AppData/Roaming/Sublime Text 2/Packages/User/Base File.sublime-settings",
+		"/C/Users/Enzy/AppData/Roaming/Sublime Text 2/Packages/User/JSON.sublime-settings",
+		"/C/Users/Enzy/AppData/Roaming/Sublime Text 2/Packages/User/Distraction Free.sublime-settings",
+		"/C/Users/Enzy/AppData/Roaming/Sublime Text 2/Packages/Default/Base File.sublime-settings",
+		"/C/Users/Enzy/AppData/Roaming/Sublime Text 2/Packages/User/Default (Windows).sublime-keymap",
+		"/C/Users/Enzy/AppData/Roaming/Sublime Text 2/Packages/Default/Global.sublime-settings",
+		"/C/Users/Enzy/AppData/Local/Temp/7zOA815.tmp/tunnel.v.glsl",
+		"/C/Users/Enzy/AppData/Local/Temp/7zO15A7.tmp/text.p.glsl",
+		"/C/Users/Enzy/AppData/Local/Temp/7zO69A1.tmp/tunnel.p.glsl",
+		"/C/School/PGR/CV10/silvestr.js",
+		"/C/School/PGR/10-heightmap/10-heightmap/main.cpp",
+		"/C/School/PGR/10-heightmap/10-heightmap/TerrainNode.vert",
+		"/C/School/PGR/10-heightmap/10-heightmap/TerrainNode.frag",
+		"/C/School/PGR/10-heightmap/10-heightmap/TerrainNode.cpp",
+		"/C/VRLServer.txt",
+		"/C/vrscene.txt",
 		"/D/School/PGR/3DT/init.js",
+		"/D/School/PGR/3DT/index.html",
+		"/D/School/PGR/3DT/README.md",
+		"/D/School/PGR/3DT/lights.js",
+		"/D/School/PGR/3DT/controls.js",
+		"/D/School/PGR/3DT/utils.js",
 		"/D/School/PGR/3DT/shadows.js",
 		"/D/School/PGR/3DT/shapes.js",
+		"/D/School/PGR/webgl-lessons/lesson11/index.html",
+		"/D/School/PGR/demo_package-Shadows/stencilShadowDemo.js",
+		"/D/School/PGR/demo_package-Shadows/index.html",
+		"/D/School/PGR/magi/src/util.js",
+		"/D/School/PGR/3DT/game.js",
 		"/D/School/PGR/3DT/textures.js",
-		"/D/School/PGR/3DT/lights.js",
-		"/D/School/PGR/3DT/index.html",
 		"/D/School/PGR/3DT/3DT.sublime-project",
 		"/D/Users/Enzy/AppData/Roaming/Sublime Text 2/Packages/Default/Base File.sublime-settings",
 		"/D/School/PGR/3DT/style.css",
@@ -278,30 +355,7 @@
 		"/W/Clevis/Ulicnik/libs/Extras/jasir-RequestsPanel-4585659/RequestsPanel.php",
 		"/W/Clevis/Ulicnik/libs/Nette/Application/Link.php",
 		"/W/Clevis/Ulicnik/libs/Nette/Application/Presenter.php",
-		"/W/Clevis/Ulicnik/libs/Nette/tools/Object.php",
-		"/W/Clevis/Ulicnik/www/css/classes.less",
-		"/D/Users/Enzy/AppData/Roaming/Sublime Text 2/Packages/Prefixr/Default (Windows).sublime-keymap",
-		"/D/Users/Enzy/AppData/Roaming/Sublime Text 2/Packages/User/Git.sublime-settings",
-		"/D/Users/Enzy/AppData/Roaming/Sublime Text 2/Packages/Default/Global.sublime-settings",
-		"/W/Clevis/Ulicnik/www/css/style.less",
-		"/D/Users/Enzy/AppData/Roaming/Sublime Text 2/Packages/LESS/LESS.tmLanguage",
-		"/D/Users/Enzy/AppData/Roaming/Sublime Text 2/Packages/CSS/CSS.tmLanguage",
-		"/W/Clevis/Ulicnik/www/css/reset.less",
-		"/W/Clevis/Ulicnik/app/bootstrap.php",
-		"/W/Clevis/Ulicnik/app/model/AccessManagement/UserAuthenticator.php",
-		"/D/Users/Enzy/AppData/Roaming/Sublime Text 2/Settings/Auto Save Session.sublime_session",
-		"/W/Clevis/Eleda/app/components/AddToClassForm/default.latte",
-		"/W/Clevis/Eleda/app/components/FolderForm/default.latte",
-		"/D/Users/Enzy/AppData/Roaming/Sublime Text 2/Packages/User/JSON.sublime-settings",
-		"/D/Users/Enzy/AppData/Roaming/Sublime Text 2/User/Base File.sublime-settings",
-		"/W/Clevis/Eleda/app/AdminModule/Presenters/Admin_BasePresenter.php",
-		"/W/Clevis/Eleda/app/bootstrap.php",
-		"/W/Clevis/Eleda/app/.htaccess",
-		"/W/Clevis/Eleda/app/config.local.neon",
-		"/W/Clevis/Eleda/app/config.neon",
-		"/W/Clevis/Eleda/app/MMR.todolist",
-		"/W/Clevis/Eleda/app/web.config",
-		"/D/Users/Enzy/AppData/Roaming/Sublime Text 2/Packages/Default/Default (Linux).sublime-keymap"
+		"/W/Clevis/Ulicnik/libs/Nette/tools/Object.php"
 	],
 	"find":
 	{
@@ -312,15 +366,80 @@
 		"height": 88.0,
 		"where_history":
 		[
+			"C:\\School\\PGR\\3DT",
 			"D:\\School\\PGR\\3DT",
 			"W:\\Clevis\\Eleda\\app\\TeacherModule"
 		]
 	},
 	"find_state":
 	{
-		"case_sensitive": false,
+		"case_sensitive": true,
 		"find_history":
 		[
+			"lightingColorUniform",
+			"lightingLocationUniform",
+			"ambientColorUniform",
+			"alphaUniform",
+			"useColorUniform",
+			"useLightingUniform",
+			"samplerUniform",
+			"nSceneUniform",
+			"nMatrixUniform",
+			"mvMatrixUniform",
+			"uPMatrix",
+			"glVertexIndexBuffer",
+			"glVertices",
+			"Uint16Array",
+			"glIndices",
+			"glVertexIndexBuffer",
+			"cubeAngle",
+			"this.light",
+			"light",
+			"shadowAngle",
+			"build",
+			"uUseLighting",
+			"shader",
+			"		<!-- ",
+			" -->",
+			"shapes",
+			"webgl",
+			"vertexPositionAttribute = gl.getAttribLocation(shaderProgram, \"aVertexPosition\");\n  gl.enableVertexAttribArray(vertexPositionAttribute);",
+			"attribute vec",
+			"normSampUniform",
+			"normap1",
+			"vBitan",
+			"lightIntensity",
+			"vNormal",
+			"vTangent",
+			"vBitan",
+			"vTexCoord",
+			"texCol",
+			"normap",
+			"mappednorm",
+			"lint",
+			"vNormal",
+			"vTangent",
+			"vBitan",
+			"lightIntensity",
+			"lightdir",
+			"mappednorm",
+			"normap",
+			"texCol",
+			"white",
+			"textureColor",
+			"texture2D",
+			"uSampler",
+			"heightMap",
+			"*",
+			"addGLVertex",
+			"glIndices",
+			"vector1",
+			"triangles",
+			"glVertexIndexBuffer",
+			"this.triangles",
+			"lightLocation",
+			"ShadowOverlay",
+			"...",
 			"TRIANGLES",
 			"createVolume",
 			"this.rotate",
@@ -384,71 +503,7 @@
 			"lightDirection",
 			"transformedNormal",
 			"uAmbientColor",
-			"directionalLightWeighting",
-			"mvPushMatrix",
-			"moonRotationMatrix",
-			"pMatrix",
-			"setMatrixUniforms",
-			"moonTexture",
-			"initTexture",
-			"moonTexture",
-			"uSampler",
-			"samplerUniform",
-			"uSampler",
-			"vTextureCoord",
-			"aTextureCoord",
-			"moonRotationMatrix",
-			"degToRad",
-			"mvPopMatrix",
-			"mvPushMatrix",
-			"<!--",
-			"mvMatrix",
-			"vertices",
-			"triangleVertexPositionBuffer",
-			"shaderProgram",
-			"triangleVertex",
-			"triangleVertexPositionBuffer",
-			"DT",
-			"\n",
-			"\"",
-			"\"\n\"",
-			",",
-			"\"command\": ",
-			"\"__doc__\":",
-			"\"profile_name\"",
-			"\"action\":",
-			"\"contents\"",
-			"\"args\": ",
-			"\"context\": [",
-			"context",
-			"{",
-			"},",
-			"  ",
-			"  \"context\": [",
-			"  \"args\": {},",
-			"  \"keys\": [",
-			"'",
-			"  \"",
-			"  },\n  \"",
-			"\"\n  ],\n  \"args\": {",
-			"\"\n  ],\n",
-			"{\n  \"keys\": [\n    \"",
-			"[{\n  \"keys\": [\n    \"",
-			"text2",
-			"class=\"text\"",
-			"text",
-			"class",
-			"header",
-			"hokusPus",
-			"class",
-			"item",
-			"event",
-			"Debug",
-			"private",
-			"@",
-			"Object",
-			"object",
-			"enhances"
+			"directionalLightWeighting"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -456,6 +511,16 @@
 		"regex": false,
 		"replace_history":
 		[
+			"uLightingColor",
+			"uLightingLocation",
+			"uAmbientColor",
+			"uAlpha",
+			"uUseColor",
+			"uUseLighting",
+			"uSampler",
+			"uSceneMatrix",
+			"uNMatrix",
+			"uMVMatrix",
 			"\\\""
 		],
 		"reverse": false,
@@ -467,7 +532,7 @@
 	"groups":
 	[
 		{
-			"selected": 1,
+			"selected": 0,
 			"sheets":
 			[
 				{
@@ -475,49 +540,49 @@
 					"file": "init.js",
 					"settings":
 					{
-						"buffer_size": 6172,
+						"buffer_size": 7954,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1725,
-								1725
+								6044,
+								6044
 							]
 						],
 						"settings":
 						{
 							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 2,
+							"tab_size": 4,
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 798.0,
+						"translation.y": 2127.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 1,
-					"file": "index.html",
+					"file": "lights.js",
 					"settings":
 					{
-						"buffer_size": 3751,
+						"buffer_size": 1209,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								146,
-								146
+								0,
+								0
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/HTML/HTML.tmLanguage",
-							"tab_size": 2,
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
@@ -528,24 +593,24 @@
 				},
 				{
 					"buffer": 2,
-					"file": "game.js",
+					"file": "shapes.js",
 					"settings":
 					{
-						"buffer_size": 4279,
+						"buffer_size": 12018,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								3779,
-								3779
+								0,
+								0
 							]
 						],
 						"settings":
 						{
 							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 2,
+							"tab_size": 4,
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
@@ -556,130 +621,18 @@
 				},
 				{
 					"buffer": 3,
-					"file": "lights.js",
+					"file": "game.js",
 					"settings":
 					{
-						"buffer_size": 1238,
+						"buffer_size": 4073,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1038,
-								1038
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 4,
-					"file": "controls.js",
-					"settings":
-					{
-						"buffer_size": 824,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								822,
-								822
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 5,
-					"file": "utils.js",
-					"settings":
-					{
-						"buffer_size": 3204,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								3204,
-								3204
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 2064.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 6,
-					"file": "shadows.js",
-					"settings":
-					{
-						"buffer_size": 11678,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								567,
-								567
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 7,
-					"file": "shapes.js",
-					"settings":
-					{
-						"buffer_size": 12440,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								82,
-								82
+								0,
+								0
 							]
 						],
 						"settings":
@@ -738,6 +691,10 @@
 		"height": 0.0,
 		"selected_items":
 		[
+			[
+				"init",
+				"init.js"
+			],
 			[
 				"object",
 				"libs/Nette/tools/Object.php"

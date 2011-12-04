@@ -1,6 +1,6 @@
 /* 
  * gl-matrix.js - High performance matrix and vector operations for WebGL
- * Version 1.0.1
+ * Version 1.1
  */
 
 /*
@@ -29,13 +29,28 @@
 "use strict";
 
 // Type declarations
-var MatrixArray = (typeof Float32Array !== 'undefined') ? Float32Array : Array, // Fallback for systems that don't support TypedArrays
-    glMatrixArrayType = MatrixArray, // For Backwards compatibility
-    vec3 = {},
-    mat3 = {},
-    mat4 = {},
-    quat4 = {};
+(function() {
+    // account for CommonJS environments
+    var _global = (typeof(exports) != 'undefined') ? global : window;
+    _global.glMatrixArrayType = _global.MatrixArray = null;
+    _global.vec3 = {};
+    _global.mat3 = {};
+    _global.mat4 = {};
+    _global.quat4 = {};
 
+    // explicitly sets and returns the type of array to use within glMatrix
+    _global.setMatrixArrayType = function(type) {
+        return glMatrixArrayType = MatrixArray = type;
+    };
+
+    // auto-detects and returns the best type of array to use within glMatrix, falling
+    // back to Array if typed arrays are unsupported
+    _global.determineMatrixArrayType = function() {
+        return setMatrixArrayType((typeof Float32Array !== 'undefined') ? Float32Array : Array);
+    };
+
+    determineMatrixArrayType();
+})();
 
 /*
  * vec3 - 3 Dimensional Vector
@@ -59,6 +74,8 @@ vec3.create = function (vec) {
         dest[0] = vec[0];
         dest[1] = vec[1];
         dest[2] = vec[2];
+    } else {
+        dest[0] = dest[1] = dest[2] = 0;
     }
 
     return dest;
@@ -703,7 +720,7 @@ mat4.determinant = function (mat) {
  * dest - Optional, mat4 receiving inverse matrix. If not specified result is written to mat
  *
  * Returns:
- * dest is specified, mat otherwise
+ * dest is specified, mat otherwise, null if matrix cannot be inverted
  */
 mat4.inverse = function (mat, dest) {
     if (!dest) { dest = mat; }
@@ -727,8 +744,12 @@ mat4.inverse = function (mat, dest) {
         b10 = a21 * a33 - a23 * a31,
         b11 = a22 * a33 - a23 * a32,
 
-        // Calculate the determinant (inlined to avoid double-caching)
-        invDet = 1 / (b00 * b11 - b01 * b10 + b02 * b09 + b03 * b08 - b04 * b07 + b05 * b06);
+        d = (b00 * b11 - b01 * b10 + b02 * b09 + b03 * b08 - b04 * b07 + b05 * b06),
+        invDet;
+
+        // Calculate the determinant
+        if (!d) { return null; }
+        invDet = 1 / d;
 
     dest[0] = (a11 * b11 - a12 * b10 + a13 * b09) * invDet;
     dest[1] = (-a01 * b11 + a02 * b10 - a03 * b09) * invDet;
@@ -821,7 +842,7 @@ mat4.toMat3 = function (mat, dest) {
  * dest - Optional, mat3 receiving values
  *
  * Returns:
- * dest is specified, a new mat3 otherwise
+ * dest is specified, a new mat3 otherwise, null if the matrix cannot be inverted
  */
 mat4.toInverseMat3 = function (mat, dest) {
     // Cache the matrix values (makes for huge speed increases!)

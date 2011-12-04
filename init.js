@@ -12,58 +12,63 @@ var debugMode = false;
 // Canvas element
 var canvas = document.getElementById("canvas");  
 // Setup a WebGL context
-gl = WebGLUtils.setupWebGL(canvas);
+/* @type HTMLCanvasElement */
+var gl = WebGLUtils.setupWebGL(canvas);
 
 // Continue only with working context
 if(gl){
   
-  // Wrap WebGL context with webgltrace
-  if(debugMode){    
-    gl = WebGLDebugUtils.makeDebugContext(gl);
-    gl.setTracing(true); // Enable tracing
-  }
+    // Wrap WebGL context with webgltrace
+    if(debugMode){    
+        gl = WebGLDebugUtils.makeDebugContext(gl);
+        gl.setTracing(true); // Enable tracing
+    }
   
-  gl.viewportWidth = canvas.width;
-  gl.viewportHeight = canvas.height;
+    gl.viewportWidth = canvas.width;
+    gl.viewportHeight = canvas.height;
 
-  gl.clearColor(0.0, 0.0, 0.0, 1.0); // Set clear color to black, fully opaque  
-  gl.enable(gl.DEPTH_TEST); // Enable depth testing  
-  gl.depthFunc(gl.LEQUAL); // Near things obscure far things  
-  gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT); // Clear the color as well as the depth buffer.   
+    gl.clearColor(0.0, 0.0, 0.0, 1); // Set clear color to black, fully opaque
+    gl.enable(gl.DEPTH_TEST); // Enable depth testing  
+    gl.depthFunc(gl.LEQUAL); // Near things obscure far things  
+    gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT); // Clear the color as well as the depth buffer.   
 
-  // Initialize the shaders; this is where all the lighting for the
-  // vertices and so forth is established.  
-  var shaderProgram;
-  initShaders();
+    // Initialize the shaders; this is where all the lighting for the
+    // vertices and so forth is established.  
+    var shaderProgram;
+    initShaders();
     
-  // Here's where we call the routine that builds all the objects
-  // we'll be drawing.      
+    // Here's where we call the routine that builds all the objects
+    // we'll be drawing.      
 
 
-  /*
-   * Global initialization
-   */  
-  var mvMatrix = mat4.create();
-  var mvMatrixStack = [];
-  var pMatrix = mat4.create();
+    /*
+     * Global initialization
+     */  
+    var mvMatrix = mat4.create();
+    var mvMatrixStack = [];
+    var pMatrix = mat4.create();
 
-  canvas.onmousedown = handleMouseDown;
-  document.onmouseup = handleMouseUp;
-  document.onmousemove = handleMouseMove;
+    canvas.onmousedown = handleMouseDown;
+    document.onmouseup = handleMouseUp;
+    document.onmousemove = handleMouseMove;
 
-  var sceneRotationMatrix = mat4.create();
-  mat4.identity(sceneRotationMatrix);
+    var sceneRotationMatrix = mat4.create();
+    mat4.identity(sceneRotationMatrix);
 
-  var lastTime = 0;  
+    var lastTime = 0;  
 
-  // Start new game!
-  var currentGame = new Game();
+    // Start new game!
+    var gameWidth = 10;
+    var gameHeight = 10;
+    var gameElevation = 20;
+    var gameZoom = 70;
+    var currentGame = new Game(gameWidth, gameHeight, gameElevation, gameZoom);
 
-  // Catch object state for debug purpose
-  if(debugMode) console.log(gl);  
+    // Catch object state for debug purpose
+    if(debugMode) console.log(gl);  
 
-  // Proceed to render cycle
-  render();
+    // Proceed to render cycle
+    render();
 }
 
 
@@ -71,29 +76,29 @@ if(gl){
 
 // Render function that draw scene on animationFrame event
 function render() {
-  window.requestAnimFrame(render, canvas); // loop  
+    window.requestAnimFrame(render, canvas); // loop  
 
-  currentGame.render();
-  animate();
+    currentGame.render();
+    animate();
 }
 
 function animate() {
-  var timeNow = new Date().getTime();
-  if (lastTime != 0) {
-      currentGame.update(timeNow - lastTime);
-  }
-  lastTime = timeNow;
+    var timeNow = new Date().getTime();
+    if (lastTime != 0) {
+        currentGame.update(timeNow - lastTime);
+    }
+    lastTime = timeNow;
 }
 
 function setMatrixUniforms() {
-  gl.uniformMatrix4fv(shaderProgram.pMatrixUniform, false, pMatrix);
-  gl.uniformMatrix4fv(shaderProgram.mvMatrixUniform, false, mvMatrix);
-  gl.uniformMatrix4fv(shaderProgram.nSceneUniform, false, sceneRotationMatrix);
+    gl.uniformMatrix4fv(shaderProgram.uPMatrix, false, pMatrix);
+    gl.uniformMatrix4fv(shaderProgram.uMVMatrix, false, mvMatrix);
+    gl.uniformMatrix4fv(shaderProgram.uSceneMatrix, false, sceneRotationMatrix);
 
-  var normalMatrix = mat3.create();
-  mat4.toInverseMat3(mvMatrix, normalMatrix);
-  mat3.transpose(normalMatrix);
-  gl.uniformMatrix3fv(shaderProgram.nMatrixUniform, false, normalMatrix);
+    var normalMatrix = mat3.create();
+    mat4.toInverseMat3(mvMatrix, normalMatrix);
+    mat3.transpose(normalMatrix);
+    gl.uniformMatrix3fv(shaderProgram.uNMatrix, false, normalMatrix);
 }
 
 
@@ -101,96 +106,126 @@ function setMatrixUniforms() {
  * Initialize the shaders, so WebGL knows how to light our scene.
  */
 function initShaders() {
-  var fragmentShader = getShader(gl, "shader-fs");
-  var vertexShader = getShader(gl, "shader-vs");
+    var fragmentShader = getShader(gl, "shader-fs");
+    var fragmentShaderAttributes = ExtractUniformsFromShaderSource(fragmentShader.source);
+
+    var vertexShader = getShader(gl, "shader-vs");
+    var vertexShaderAttributes = ExtractUniformsFromShaderSource(vertexShader.source);
+
+    console.log(fragmentShaderAttributes, vertexShaderAttributes);    
   
-  // Create the shader program  
-  shaderProgram = gl.createProgram();
-  gl.attachShader(shaderProgram, vertexShader);
-  gl.attachShader(shaderProgram, fragmentShader);
-  gl.linkProgram(shaderProgram);
+    // Create the shader program  
+    window.shaderProgram = gl.createProgram();
+    gl.attachShader(shaderProgram, vertexShader.shader);
+    gl.attachShader(shaderProgram, fragmentShader.shader);
+    gl.linkProgram(shaderProgram);
   
-  // If creating the shader program failed, alert
-  if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) {
-    alert("Unable to initialize the shader program.");
-  }
+    // If creating the shader program failed, alert
+    if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) {
+        alert("Unable to initialize the shader program.");
+    }
   
-  gl.useProgram(shaderProgram);  
+    gl.useProgram(shaderProgram);  
 
-  shaderProgram.vertexPositionAttribute = gl.getAttribLocation(shaderProgram, "aVertexPosition");
-  gl.enableVertexAttribArray(shaderProgram.vertexPositionAttribute);
+    shaderProgram.vertexPositionAttribute = gl.getAttribLocation(shaderProgram, "aVertexPosition");
+    gl.enableVertexAttribArray(shaderProgram.vertexPositionAttribute);
 
-  shaderProgram.textureCoordAttribute = gl.getAttribLocation(shaderProgram, "aTextureCoord");
-  gl.enableVertexAttribArray(shaderProgram.textureCoordAttribute);
+    shaderProgram.textureCoordAttribute = gl.getAttribLocation(shaderProgram, "aTextureCoord");
+    gl.enableVertexAttribArray(shaderProgram.textureCoordAttribute);
 
-  shaderProgram.vertexNormalAttribute = gl.getAttribLocation(shaderProgram, "aVertexNormal");
-  gl.enableVertexAttribArray(shaderProgram.vertexNormalAttribute);
+    shaderProgram.vertexNormalAttribute = gl.getAttribLocation(shaderProgram, "aVertexNormal");
+    gl.enableVertexAttribArray(shaderProgram.vertexNormalAttribute);
 
-  shaderProgram.vertexColorAttribute = gl.getAttribLocation(shaderProgram, "aVertexColor");
-  gl.enableVertexAttribArray(shaderProgram.vertexColorAttribute);
+    shaderProgram.vertexColorAttribute = gl.getAttribLocation(shaderProgram, "aVertexColor");
+    gl.enableVertexAttribArray(shaderProgram.vertexColorAttribute);
 
-  shaderProgram.pMatrixUniform = gl.getUniformLocation(shaderProgram, "uPMatrix");
-  shaderProgram.mvMatrixUniform = gl.getUniformLocation(shaderProgram, "uMVMatrix");
-  shaderProgram.nMatrixUniform = gl.getUniformLocation(shaderProgram, "uNMatrix");
-  shaderProgram.nSceneUniform = gl.getUniformLocation(shaderProgram, "uSceneMatrix");
-  shaderProgram.samplerUniform = gl.getUniformLocation(shaderProgram, "uSampler");
+    //
+    // ["uMVMatrix", "uPMatrix", "uNMatrix", "uSceneMatrix", "uAmbientColor", "uLightingLocation", "uLightingColor", "uUseLighting", "uUseColor"] Vertex shader
+    // ["uUseLighting", "uUseColor", "uAlpha"] Fragment shader
 
-  shaderProgram.useLightingUniform = gl.getUniformLocation(shaderProgram, "uUseLighting");
-  shaderProgram.useColorUniform = gl.getUniformLocation(shaderProgram, "uUseColor");
+    // Apply vertex shader uniforms
+    for (i = 0; i < vertexShaderAttributes.length; i++) {
+        shaderProgram[vertexShaderAttributes[i]] = gl.getUniformLocation(shaderProgram, vertexShaderAttributes[i]);
+    }
+    // Apply fragment shader uniforms
+    for (i = 0; i < fragmentShaderAttributes.length; i++) {
+        shaderProgram[fragmentShaderAttributes[i]] = gl.getUniformLocation(shaderProgram, fragmentShaderAttributes[i]);
+    }
+    
 
-  shaderProgram.alphaUniform = gl.getUniformLocation(shaderProgram, "uAlpha");
-  shaderProgram.ambientColorUniform = gl.getUniformLocation(shaderProgram, "uAmbientColor");
-  shaderProgram.lightingLocationUniform = gl.getUniformLocation(shaderProgram, "uLightingLocation");
-  shaderProgram.lightingColorUniform = gl.getUniformLocation(shaderProgram, "uLightingColor");
+//     shaderProgram.uPMatrix = gl.getUniformLocation(shaderProgram, "uPMatrix");
+//     shaderProgram.uMVMatrix = gl.getUniformLocation(shaderProgram, "uMVMatrix");
+//     shaderProgram.uNMatrix = gl.getUniformLocation(shaderProgram, "uNMatrix");
+//     shaderProgram.uSceneMatrix = gl.getUniformLocation(shaderProgram, "uSceneMatrix");
+//     shaderProgram.uSampler = gl.getUniformLocation(shaderProgram, "uSampler");
+
+//     shaderProgram.uUseLighting = gl.getUniformLocation(shaderProgram, "uUseLighting");
+//     shaderProgram.uUseColor = gl.getUniformLocation(shaderProgram, "uUseColor");
+
+//     shaderProgram.uAlpha = gl.getUniformLocation(shaderProgram, "uAlpha");
+//     shaderProgram.uAmbientColor = gl.getUniformLocation(shaderProgram, "uAmbientColor");
+//     shaderProgram.uLightingLocation = gl.getUniformLocation(shaderProgram, "uLightingLocation");
+//     shaderProgram.uLightingColor = gl.getUniformLocation(shaderProgram, "uLightingColor");
 }
 
 /*
  * Loads a shader program by scouring the current document, looking for a script with the specified ID.
  */
 function getShader(gl, id) {
-  var shaderScript = document.getElementById(id);
+    var shaderScript = document.getElementById(id);
   
-  // Didn't find an element with the specified ID; abort.  
-  if (!shaderScript) {
-    return null;
-  }
-  
-  // Walk through the source element's children, building the shader source string.  
-  var theSource = "";
-  var currentChild = shaderScript.firstChild;
-  
-  while(currentChild) {
-    if (currentChild.nodeType == 3) {
-      theSource += currentChild.textContent;
+    // Didn't find an element with the specified ID; abort.  
+    if (!shaderScript) {
+        return null;
     }
+  
+    // Walk through the source element's children, building the shader source string.  
+    var theSource = "";
+    var currentChild = shaderScript.firstChild;
+  
+    while(currentChild) {
+        if (currentChild.nodeType == 3) {
+            theSource += currentChild.textContent;
+        }
     
-    currentChild = currentChild.nextSibling;
-  }
+        currentChild = currentChild.nextSibling;
+    }
+    // Eventualy load external file via AJAX call
+    if(!currentChild && shaderScript.src){    
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.open("GET", shaderScript.src, false);    
+        xmlhttp.onreadystatechange = function(){
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200){
+                theSource = xmlhttp.responseText;
+            }
+        }
+        xmlhttp.send();
+    }  
   
-  // Now figure out what type of shader script we have, based on its MIME type.  
-  var shader;
+    // Now figure out what type of shader script we have, based on its MIME type.  
+    var shader;
   
-  if (shaderScript.type == "x-shader/x-fragment") {
-    shader = gl.createShader(gl.FRAGMENT_SHADER);
-  } else if (shaderScript.type == "x-shader/x-vertex") {
-    shader = gl.createShader(gl.VERTEX_SHADER);
-  } else {
-    return null;  // Unknown shader type
-  }
+    if (shaderScript.type == "x-shader/x-fragment") {
+        shader = gl.createShader(gl.FRAGMENT_SHADER);
+    } else if (shaderScript.type == "x-shader/x-vertex") {
+        shader = gl.createShader(gl.VERTEX_SHADER);
+    } else {
+        return null;  // Unknown shader type
+    }
   
-  // Send the source to the shader object  
-  gl.shaderSource(shader, theSource);
+    // Send the source to the shader object  
+    gl.shaderSource(shader, theSource);
   
-  // Compile the shader program  
-  gl.compileShader(shader);
+    // Compile the shader program  
+    gl.compileShader(shader);
   
-  // See if it compiled successfully  
-  if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-    alert("An error occurred compiling the shaders: " + gl.getShaderInfoLog(shader));
-    return null;
-  }
+    // See if it compiled successfully  
+    if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+        alert("An error occurred compiling the shaders: " + gl.getShaderInfoLog(shader));
+        return null;
+    }
   
-  return shader;
+    return {shader:shader, source:theSource};
 }
 
 
