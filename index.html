@@ -19,16 +19,23 @@
         <script type="text/javascript" src="lights.js"></script><!--  -->
         <script type="text/javascript" src="textures.js"></script><!--  -->
         <script type="text/javascript" src="controls.js"></script><!--  -->
+        <!-- Brick's types from external file -->
+        <script type="text/javascript" src="bricks.js"></script>
         <!-- Game scene and logic -->
         <script type="text/javascript" src="game.js"></script>
     </head>
     <body>
         <h1>3DT - 3D Tetris in WebGL | Work In Progress!</h1>
-        <canvas id="canvas" width="640" height="480"></canvas>
+        <canvas id="canvas" width="800" height="600"></canvas>
 
         <script id="shader-vs" type="x-shader/x-vertex" src="shader.vert"></script>
         <script id="shader-fs" type="x-shader/x-fragment" src="shader.frag"></script>
 
         <script type="text/javascript" src="init.js"></script>
+
+        <div id="controls">
+            <button onclick="toogleCameraAnimation();">Automate camera</button>
+            <button onclick="toogleMadLights();">Mad Lights</button>
+        </div>
     </body>
 </html>

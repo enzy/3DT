@@ -99,10 +99,7 @@ Shape = Class({
     /*
      * Render the object
      */
-    render: function(){        
-
-        gl.enable(gl.DEPTH_TEST);
-        gl.depthFunc(gl.LEQUAL);        
+    render: function(){
         
         // Set the vertex position buffer
         gl.bindBuffer(gl.ARRAY_BUFFER, this.glPositionBuffer);
@@ -133,6 +130,11 @@ Shape = Class({
 
 /*
  * Shape class: Cube
+ * 
+ * @param Number sizeX
+ * @param Number sizeY
+ * @param Number sizeZ
+ * @param Texture texture
  */
 Cube = Class(Shape, {
     /*

@@ -6,7 +6,6 @@ varying vec2 vTextureCoord;
 varying vec3 vLightWeighting;
 
 uniform sampler2D uSampler;
-uniform float uAlpha;
 
 void main(void) {
   

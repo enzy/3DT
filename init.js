@@ -24,7 +24,10 @@ if(gl){
     gl.clearColor(0.0, 0.0, 0.0, 1); // Set clear color to black, fully opaque
     gl.enable(gl.DEPTH_TEST); // Enable depth testing  
     gl.depthFunc(gl.LEQUAL); // Near things obscure far things  
-    gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT); // Clear the color as well as the depth buffer.   
+    gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT); // Clear the color as well as the depth buffer.
+
+    gl.enable(gl.CULL_FACE);
+    gl.cullFace(gl.BACK);
 
     // Initialize the shaders; this is where all the lighting for the
     // vertices and so forth is established.  
@@ -39,21 +42,24 @@ if(gl){
     var mvMatrixStack = [];
     var pMatrix = mat4.create();
 
+    var cameraAngleX = degToRad(20);
+    var cameraAngleY = 0;
+    var cameraZoom = 70;
+
     canvas.onmousedown = handleMouseDown;
     document.onmouseup = handleMouseUp;
     document.onmousemove = handleMouseMove;
 
-    var sceneRotationMatrix = mat4.create();
-    mat4.identity(sceneRotationMatrix);
+    if (window.addEventListener) window.addEventListener('DOMMouseScroll', handleMouseWheel, false);
+    window.onmousewheel = document.onmousewheel = handleMouseWheel;
 
     var lastTime = 0;  
 
     // Start new game!
     var gameWidth = 10;
     var gameHeight = 10;
-    var gameElevation = 20;
-    var gameZoom = 70;
-    var currentGame = new Game(gameWidth, gameHeight, gameElevation, gameZoom);
+    var gameElevation = 20;    
+    var currentGame = new Game(gameWidth, gameHeight, gameElevation, cameraZoom);
 
     // Catch object state for debug purpose
     if(debugMode) console.log(gl);  
@@ -83,8 +89,7 @@ function animate() {
 
 function setMatrixUniforms() {
     gl.uniformMatrix4fv(shaderProgram.uPMatrix, false, pMatrix);
-    gl.uniformMatrix4fv(shaderProgram.uMVMatrix, false, mvMatrix);
-    gl.uniformMatrix4fv(shaderProgram.uSceneMatrix, false, sceneRotationMatrix);
+    gl.uniformMatrix4fv(shaderProgram.uMVMatrix, false, mvMatrix);    
 
     var normalMatrix = mat3.create();
     mat4.toInverseMat3(mvMatrix, normalMatrix);
@@ -125,21 +130,14 @@ function initShaders() {
     gl.enableVertexAttribArray(shaderProgram.textureCoordAttribute);
 
     shaderProgram.vertexNormalAttribute = gl.getAttribLocation(shaderProgram, "aVertexNormal");
-    gl.enableVertexAttribArray(shaderProgram.vertexNormalAttribute);
-
-    //shaderProgram.vertexColorAttribute = gl.getAttribLocation(shaderProgram, "aVertexColor");
-    //gl.enableVertexAttribArray(shaderProgram.vertexColorAttribute);
-
-    //
-    // ["uMVMatrix", "uPMatrix", "uNMatrix", "uSceneMatrix", "uAmbientColor", "uLightingLocation", "uLightingColor", "uUseLighting", "uUseColor"] Vertex shader
-    // ["uUseLighting", "uUseColor", "uAlpha"] Fragment shader
+    gl.enableVertexAttribArray(shaderProgram.vertexNormalAttribute);            
 
     // Apply vertex shader uniforms
-    for (i = 0; i < vertexShaderAttributes.length; i++) {
+    for (var i = 0; i < vertexShaderAttributes.length; i++) {
         shaderProgram[vertexShaderAttributes[i]] = gl.getUniformLocation(shaderProgram, vertexShaderAttributes[i]);
     }
     // Apply fragment shader uniforms
-    for (i = 0; i < fragmentShaderAttributes.length; i++) {
+    for (var i = 0; i < fragmentShaderAttributes.length; i++) {
         shaderProgram[fragmentShaderAttributes[i]] = gl.getUniformLocation(shaderProgram, fragmentShaderAttributes[i]);
     }
 
