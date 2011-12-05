@@ -8,7 +8,7 @@
  */
 
 // Debug mode for code tracing
-var debugMode = false;
+var debugMode = true;
 // Canvas element
 var canvas = document.getElementById("canvas");  
 // Setup a WebGL context
@@ -17,12 +17,6 @@ var gl = WebGLUtils.setupWebGL(canvas);
 
 // Continue only with working context
 if(gl){
-  
-    // Wrap WebGL context with webgltrace
-    if(debugMode){    
-        gl = WebGLDebugUtils.makeDebugContext(gl);
-        gl.setTracing(true); // Enable tracing
-    }
   
     gl.viewportWidth = canvas.width;
     gl.viewportHeight = canvas.height;
@@ -35,10 +29,7 @@ if(gl){
     // Initialize the shaders; this is where all the lighting for the
     // vertices and so forth is established.  
     var shaderProgram;
-    initShaders();
-    
-    // Here's where we call the routine that builds all the objects
-    // we'll be drawing.      
+    initShaders();    
 
 
     /*
@@ -112,7 +103,7 @@ function initShaders() {
     var vertexShader = getShader(gl, "shader-vs");
     var vertexShaderAttributes = ExtractUniformsFromShaderSource(vertexShader.source);
 
-    console.log(fragmentShaderAttributes, vertexShaderAttributes);    
+    console.log("Fragment shader's uniforms:", fragmentShaderAttributes, "Vertex shader's uniforms:", vertexShaderAttributes);    
   
     // Create the shader program  
     window.shaderProgram = gl.createProgram();
@@ -136,8 +127,8 @@ function initShaders() {
     shaderProgram.vertexNormalAttribute = gl.getAttribLocation(shaderProgram, "aVertexNormal");
     gl.enableVertexAttribArray(shaderProgram.vertexNormalAttribute);
 
-    shaderProgram.vertexColorAttribute = gl.getAttribLocation(shaderProgram, "aVertexColor");
-    gl.enableVertexAttribArray(shaderProgram.vertexColorAttribute);
+    //shaderProgram.vertexColorAttribute = gl.getAttribLocation(shaderProgram, "aVertexColor");
+    //gl.enableVertexAttribArray(shaderProgram.vertexColorAttribute);
 
     //
     // ["uMVMatrix", "uPMatrix", "uNMatrix", "uSceneMatrix", "uAmbientColor", "uLightingLocation", "uLightingColor", "uUseLighting", "uUseColor"] Vertex shader
@@ -151,21 +142,7 @@ function initShaders() {
     for (i = 0; i < fragmentShaderAttributes.length; i++) {
         shaderProgram[fragmentShaderAttributes[i]] = gl.getUniformLocation(shaderProgram, fragmentShaderAttributes[i]);
     }
-    
 
-//     shaderProgram.uPMatrix = gl.getUniformLocation(shaderProgram, "uPMatrix");
-//     shaderProgram.uMVMatrix = gl.getUniformLocation(shaderProgram, "uMVMatrix");
-//     shaderProgram.uNMatrix = gl.getUniformLocation(shaderProgram, "uNMatrix");
-//     shaderProgram.uSceneMatrix = gl.getUniformLocation(shaderProgram, "uSceneMatrix");
-//     shaderProgram.uSampler = gl.getUniformLocation(shaderProgram, "uSampler");
-
-//     shaderProgram.uUseLighting = gl.getUniformLocation(shaderProgram, "uUseLighting");
-//     shaderProgram.uUseColor = gl.getUniformLocation(shaderProgram, "uUseColor");
-
-//     shaderProgram.uAlpha = gl.getUniformLocation(shaderProgram, "uAlpha");
-//     shaderProgram.uAmbientColor = gl.getUniformLocation(shaderProgram, "uAmbientColor");
-//     shaderProgram.uLightingLocation = gl.getUniformLocation(shaderProgram, "uLightingLocation");
-//     shaderProgram.uLightingColor = gl.getUniformLocation(shaderProgram, "uLightingColor");
 }
 
 /*

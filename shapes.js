@@ -17,33 +17,9 @@ Shape = Class({
         this.glPositionBuffer     =  null; // Position buffer for gl
         this.glNormalBuffer       =  null; // Normal buffer for gl
         this.glTextureCoordBuffer =  null; // Texture cooordinate buffer for gl
-        this.glVertexIndexBuffer  =  null; // Vertex buffer for gl
-
-        this.vertices             =  [];   // List of unique vertices of the object
-        this.verticesHash         =  {};   // Hash list of vertices
-
-        this.lines                =  [];   // List of lines in both directions
-        this.linesUnique          =  [];   // A list of unique lines
-
-        this.triangles            =  [];   // Triangles in the object
+        this.glVertexIndexBuffer  =  null; // Vertex buffer for gl        
     },
 
-    /*
-     * Add a vertex, merge close vertices. Returns the vertex index.
-     */
-    addVextex: function(x, y, z) {
-        var hash  = ~~(x * 1000) + '_' + ~~(y * 1000) + '_' + ~~(z * 1000),
-        index = this.verticesHash[hash]; // Check if the value was added before
-
-        if (index === undefined) { // A new vertex
-            index                   = this.vertices.length;
-            this.verticesHash[hash] = index;
-            vertex                  = [x, y, z];
-            this.vertices.push(vertex);
-        }
-
-        return index;
-    },
 
     /*
      * Add position and texture cooordinates to the gl lists. Returns the index of the vertex
@@ -67,42 +43,16 @@ Shape = Class({
         this.glNormals.push(normal[0]);
         this.glNormals.push(normal[1]);
         this.glNormals.push(normal[2]);
-    },
+    },    
 
     /*
-     * Add a line. Check if the line is also used by an other polygon. Returns the index of the line.
-     */
-    addLine: function(v1, v2) {
-        this.lines.push({
-            v1:v1, 
-            v2:v2
-        });
-
-        return this.lines.length - 1;  
-    },
-
-    /*
-     * Add a triangle to this object. Adds the vertex information to the buffers needed the build the shadow.
+     * Add a triangle to this object.
      */
     addTriangle: function(x1, y1, z1, uu1, vv1,
-        x2, y2, z2, uu2, vv2,
-        x3, y3, z3, uu3, vv3) {
-        var vertex1, vertex2, vertex3,
-        line1, line2, line3,
-        vector1, vector2, vector3,
-        triangleCount = this.triangles.length, // The index of the new triangle
-        center;
+                          x2, y2, z2, uu2, vv2,
+                          x3, y3, z3, uu3, vv3) {
 
-        // Add the vertices
-        vertex1 = this.addVextex(x1, y1, z1);
-        vertex2 = this.addVextex(x2, y2, z2);
-        vertex3 = this.addVextex(x3, y3, z3);
-
-        // Add the lines, these are used to calculate the edge of the object
-        // Each line is associated with the new triangle
-        line1   = this.addLine(vertex1, vertex2);
-        line2   = this.addLine(vertex2, vertex3);
-        line3   = this.addLine(vertex3, vertex1);
+        var vector1, vector2, vector3;        
 
         // Calculate the normal of the triangle
         vector1 = vec3.create([x2 - x1, y2 - y1, z2 - z1]);
@@ -117,17 +67,7 @@ Shape = Class({
         // Add the vertex cooordinates and texture info and store the index values
         this.glIndices.push(this.addGLVertex(x1, y1, z1, uu1, vv1));
         this.glIndices.push(this.addGLVertex(x2, y2, z2, uu2, vv2));
-        this.glIndices.push(this.addGLVertex(x3, y3, z3, uu3, vv3));
-
-        // Add a new triangle
-        // The center is needed to caculate the direction of the triangle to the light source.
-        this.triangles.push({
-            vertices : [vertex1, vertex2, vertex3],
-            lines    : [line1, line2, line3],
-            normal   : vector3,
-            center   : [(x1 + x2 + x3) / 3, (y1 + y2 + y3) / 3, (z1 + z2 + z3) / 3],
-            visible  : false
-        });                        
+        this.glIndices.push(this.addGLVertex(x3, y3, z3, uu3, vv3));       
     },
 
     /*
@@ -159,15 +99,10 @@ Shape = Class({
     /*
      * Render the object
      */
-    render: function(){
-        gl.enable(gl.CULL_FACE);
-        gl.cullFace(gl.BACK);
+    render: function(){        
 
         gl.enable(gl.DEPTH_TEST);
-        gl.depthFunc(gl.LEQUAL);
-
-        // Disable the color attribute, not needed because the object has a texture
-        gl.disableVertexAttribArray(shaderProgram.vertexColorAttribute);
+        gl.depthFunc(gl.LEQUAL);        
         
         // Set the vertex position buffer
         gl.bindBuffer(gl.ARRAY_BUFFER, this.glPositionBuffer);
@@ -186,10 +121,7 @@ Shape = Class({
         // Set the texture
         gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, this.texture);
-        gl.uniform1i(shaderProgram.uSampler, 0);
-
-        // Don't use the color attribute
-        gl.uniform1i(shaderProgram.uUseColor, 0);
+        gl.uniform1i(shaderProgram.uSampler, 0);        
 
         // Set the index, render the triangles
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.glVertexIndexBuffer);

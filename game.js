@@ -9,25 +9,18 @@ Game = Class({
         this.zoom = gameZoom;
         this.shapes = [];
         this.shapeInstances = [];
-        this.objects = [];
+        this.objects = []; // Array of shapeInstances, suitable to move with whole group
         this.cubeAngle = 0;
         this.sunAngle = 0;
+        this.sun2Angle = 0;
         this.sun = new Light();
+        this.sun2 = new Light();
 
         // Create a floor shape #0
-        this.addShape(new Cube(this.width, 0.1, this.height, new Texture('#00AA00', '#00AA00')));
+        this.addShape(new Cube(this.width, 0.1, this.height, new Texture('#00AA00', '#FFFFFF')));
         
         // Create a brick shape #1
-        this.addShape(new Cube(1, 1, 1, new Texture('#00AAAA', '#00AAAA')));
-
-        // Create the rotating objects with colors
-        //this.addShape(new Cube(10, 1, 1, new Texture('#FF0000', '#FF0000')));    
-    
-        // Create the objects on the floor in black and white
-        //this.addShape(new Cube(8, 2, 2, new Texture('#0000FF', '#0000FF')));
-        
-        //this.addShape(new Pyramid(2, 2, 2, new Texture('#00FF00', '#00FF00')));
-    
+        this.addShape(new Cube(1, 1, 1, new Texture('#00AAAA', '#FFFFFF')));
         
         // Create an instance of the floor
         this.shapeInstances.push({
@@ -103,14 +96,17 @@ Game = Class({
         gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
 
-        mat4.perspective(45, gl.viewportWidth / gl.viewportHeight, 0.1, 100.0, pMatrix);
+        mat4.perspective(28, gl.viewportWidth / gl.viewportHeight, 0.1, 500.0, pMatrix);
         mat4.identity(mvMatrix);
     
-        mat4.translate(mvMatrix, [0, 0, -this.zoom]);        
+        // Position of whole scene (center it in viewport)
+        mat4.translate(mvMatrix, [0, -this.elevation / 2 + 2, -this.zoom]);
+        // And rotate to good overview
         mat4.rotateX(mvMatrix, degToRad(20));
         mat4.rotateY(mvMatrix, degToRad(-this.cubeAngle * 0.5));
 
         this.sun.update(this.sunAngle);        
+        this.sun2.update(this.sun2Angle);
     
         // Render all objects
         for (i = shapeInstances.length-1; i >= 0; i--) {
@@ -131,6 +127,7 @@ Game = Class({
       
         this.cubeAngle   += 0.1  * elapsed;
         this.sunAngle    += 0.001 * elapsed;
+        this.sun2Angle    += 0.002 * elapsed;
       
         
         

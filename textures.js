@@ -13,11 +13,11 @@ Texture = Class({
         canvas.height     = 128;
 
         context.fillStyle = color1;
-        context.fillRect(0, 0, 128, 128);
+        context.fillRect(0, 0, canvas.width, canvas.height);
 
         context.fillStyle = color2;
-        context.fillRect( 0,  0, 64, 64);
-        context.fillRect(64, 64, 64, 64);
+        context.fillRect( 0,  0, canvas.width/2, canvas.height/2);
+        context.fillRect(canvas.width/2, canvas.height/2, canvas.width/2, canvas.height/2);
 
         texture = gl.createTexture();
         gl.bindTexture(gl.TEXTURE_2D, texture);
