@@ -13,6 +13,7 @@ Game = Class({
         this.sun2Angle = 0;
         this.sun = new Light();
         this.sun2 = new Light();
+
         this.timer = 0;
         this.timeStep = gameTimeStep;
 
