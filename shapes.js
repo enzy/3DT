@@ -104,6 +104,7 @@ Shape = Class({
      */
     render: function(){
 
+        // Flip side settings for ex. skybox
         if(this.flipSided) {
             gl.frontFace(gl.CW);
         } else {
@@ -125,8 +126,7 @@ Shape = Class({
         gl.vertexAttribPointer(shaderProgram.textureCoordAttribute, this.glTextureCoordBuffer.itemSize, gl.FLOAT, false, 0, 0);
 
         // Set the texture
-        try{this.textureObject.update();} catch(e){}
-
+        try{this.textureObject.update();} catch(e){} // Test if texture is animated
         gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, this.texture);
         gl.uniform1i(shaderProgram.uSampler, 0);
@@ -136,6 +136,9 @@ Shape = Class({
         setMatrixUniforms();
         gl.drawElements(gl.TRIANGLES, this.glVertexIndexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
     },
+    /*
+     * Set shape to be rendered with CW front face mode
+     */
     setFlipSided: function(){
         this.flipSided = true;
     }
