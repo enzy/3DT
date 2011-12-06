@@ -9,33 +9,36 @@ Light = Class({
         this.lightingColor = [2, 2, 2];
         this.ambientColor = [0.1, 0.1, 0.1];
     },
-      
+
     /*
      * Update the light source position, render a cube to show the position
      */
     update: function(angle) {
-        this.location = vec3.create([Math.sin(angle) * 10, 18 + Math.cos(angle * 0.5) * 10, Math.cos(angle * 0.8) * 10]);
-
         if(madLights){
             this.lightingColor[0] = Math.sin(angle) + 1;
             this.lightingColor[1] = Math.sin(angle * 0.5) + 1;
             this.lightingColor[2] = Math.sin(angle * 0.8) + 1;
+            this.ambientColor = [Math.sin(angle), Math.cos(angle),Math.sin(angle)];
+            angle *= 10;
         } else {
             this.lightingColor = [2, 2, 2];
+            this.ambientColor = [0.1, 0.1, 0.1];
         }
-                    
+
+        this.location = vec3.create([Math.sin(angle) * 10, 18 + Math.cos(angle * 0.5) * 10, Math.cos(angle * 0.8) * 10]);
+
         mvPushMatrix();
         // Move to the light position
-        mat4.translate(mvMatrix, this.location);                     
-      
+        mat4.translate(mvMatrix, this.location);
+
         // Render the cube
         this.cube.render();
 
         // Set the light position, color and the ambient color
-        gl.uniform3f(shaderProgram.uLightingLocation, mvMatrix[12], mvMatrix[10], mvMatrix[14]);            
+        gl.uniform3f(shaderProgram.uLightingLocation, mvMatrix[12], mvMatrix[10], mvMatrix[14]);
         gl.uniform3f(shaderProgram.uLightingColor, this.lightingColor[0], this.lightingColor[1], this.lightingColor[2]);
         gl.uniform3f(shaderProgram.uAmbientColor,  this.ambientColor[0], this.ambientColor[1], this.ambientColor[2]);
         mvPopMatrix();
     }
-       
+
 });

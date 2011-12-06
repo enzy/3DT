@@ -3,7 +3,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 
-        <title>3DT - 3D Tetris in WebGL | Work In Progress!</title>
+        <title>3DT - 3D Tetris in WebGL (Work In Progress!)</title>
 
         <link rel="stylesheet" href="style.css">
 
@@ -23,19 +23,29 @@
         <script type="text/javascript" src="bricks.js"></script>
         <!-- Game scene and logic -->
         <script type="text/javascript" src="game.js"></script>
+
+        <!-- Some very basic styles -->
+        <style type="text/css">
+            body{background: #EEE; padding: 3em; text-align: center; font-family: Ubuntu, sans-serif;}
+            h1{text-shadow: 2px 2px 1px rgba(0,0,0,0.5);}
+            video{display: none;}
+        </style>
     </head>
     <body>
-        <h1>3DT - 3D Tetris in WebGL | Work In Progress!</h1>
-        <canvas id="canvas" width="800" height="600"></canvas>
+        <h1>3DT - 3D Tetris in WebGL <br>(work in progress)</h1>
+        <canvas id="canvas" width="600" height="600"></canvas>
 
         <script id="shader-vs" type="x-shader/x-vertex" src="shader.vert"></script>
         <script id="shader-fs" type="x-shader/x-fragment" src="shader.frag"></script>
+
+        <video id="video" src="Firefox.ogv" autoplay loop></video>
 
         <script type="text/javascript" src="init.js"></script>
 
         <div id="controls">
             <button onclick="toogleCameraAnimation();">Automate camera</button>
-            <button onclick="toogleMadLights();">Mad Lights</button>
+            <button onclick="toogleMadLights();">Mad Lights (DISCO!)</button>
+            <button onclick="toogleBackgroundOpacity();">Switch background</button>
         </div>
     </body>
 </html>

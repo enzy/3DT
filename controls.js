@@ -7,6 +7,10 @@ var lastMouseX = null;
 var lastMouseY = null;
 var cameraAnimation = false;
 var madLights = false;
+var nextMoveX = 0;
+var nextMoveZ = 0;
+var nextRotation = 0;
+var backgroundToogle = false;
 
 function handleMouseDown(event) {
     mouseDown = true;
@@ -32,7 +36,7 @@ function handleMouseMove(event) {
     // mat4.rotate(newRotationMatrix, degToRad(deltaY / 10), [1, 0, 0]);
 
     //
-    
+
     cameraAngleY += degToRad(deltaX * 0.5);
     cameraAngleX += degToRad(deltaY * 0.5);
 
@@ -83,5 +87,47 @@ function toogleMadLights(){
         madLights = false;
     } else {
         madLights = true;
+    }
+}
+
+function handleKeyPress(event){
+    switch (event.keyCode) {
+        case 38:
+            // up
+            nextMoveZ--;
+            break;
+        case 40:
+            // down
+            nextMoveZ++;
+            break;
+        case 37:
+            // left
+            nextMoveX--;
+            break;
+        case 39:
+            // Right
+            nextMoveX++;
+            break;
+        default:
+            break;
+    }
+    switch (event.charCode){
+        case 32:
+            // spacebar
+            nextRotation++;
+            break;
+        default:
+            break;
+    }
+
+}
+
+function toogleBackgroundOpacity(){
+    if(backgroundToogle){
+        backgroundToogle = false;
+        gl.clearColor(0.0, 0.0, 0.0, 0);
+    } else {
+        backgroundToogle = true;
+        gl.clearColor(0.0, 0.0, 0.0, 1);
     }
 }

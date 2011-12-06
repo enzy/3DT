@@ -8,36 +8,35 @@
  */
 
 // Debug mode for code tracing
-var debugMode = true;
+var debugMode = false;
 // Canvas element
-var canvas = document.getElementById("canvas");  
+var canvas = document.getElementById("canvas");
 // Setup a WebGL context
 /* @type HTMLCanvasElement */
 var gl = WebGLUtils.setupWebGL(canvas);
 
 // Continue only with working context
 if(gl){
-  
+
     gl.viewportWidth = canvas.width;
     gl.viewportHeight = canvas.height;
 
-    gl.clearColor(0.0, 0.0, 0.0, 1); // Set clear color to black, fully opaque
-    gl.enable(gl.DEPTH_TEST); // Enable depth testing  
-    gl.depthFunc(gl.LEQUAL); // Near things obscure far things  
+    gl.clearColor(0.0, 0.0, 0.0, 0); // Set clear color to black, fully opaque
+    gl.enable(gl.DEPTH_TEST); // Enable depth testing
+    gl.depthFunc(gl.LEQUAL); // Near things obscure far things
     gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT); // Clear the color as well as the depth buffer.
 
     gl.enable(gl.CULL_FACE);
     gl.cullFace(gl.BACK);
 
     // Initialize the shaders; this is where all the lighting for the
-    // vertices and so forth is established.  
+    // vertices and so forth is established.
     var shaderProgram;
-    initShaders();    
-
+    initShaders();
 
     /*
      * Global initialization
-     */  
+     */
     var mvMatrix = mat4.create();
     var mvMatrixStack = [];
     var pMatrix = mat4.create();
@@ -49,23 +48,31 @@ if(gl){
     canvas.onmousedown = handleMouseDown;
     document.onmouseup = handleMouseUp;
     document.onmousemove = handleMouseMove;
+    document.onkeypress = handleKeyPress;
 
     if (window.addEventListener) window.addEventListener('DOMMouseScroll', handleMouseWheel, false);
     window.onmousewheel = document.onmousewheel = handleMouseWheel;
 
-    var lastTime = 0;  
+    var lastTime = 0;
 
     // Start new game!
     var gameWidth = 10;
     var gameHeight = 10;
-    var gameElevation = 20;    
-    var currentGame = new Game(gameWidth, gameHeight, gameElevation, cameraZoom);
+    var gameElevation = 20;
+    var gameTimeStep = 500;
+    var currentGame;
+
+
+    window.onload = function(){
+        currentGame = new Game(gameWidth, gameHeight, gameElevation, gameTimeStep);
+        // Proceed to render cycle
+        render();
+    }
 
     // Catch object state for debug purpose
-    if(debugMode) console.log(gl);  
+    if(debugMode) console.log(gl);
 
-    // Proceed to render cycle
-    render();
+
 }
 
 
@@ -73,7 +80,7 @@ if(gl){
 
 // Render function that draw scene on animationFrame event
 function render() {
-    window.requestAnimFrame(render, canvas); // loop  
+    window.requestAnimFrame(render, canvas); // loop
 
     currentGame.render();
     animate();
@@ -89,7 +96,7 @@ function animate() {
 
 function setMatrixUniforms() {
     gl.uniformMatrix4fv(shaderProgram.uPMatrix, false, pMatrix);
-    gl.uniformMatrix4fv(shaderProgram.uMVMatrix, false, mvMatrix);    
+    gl.uniformMatrix4fv(shaderProgram.uMVMatrix, false, mvMatrix);
 
     var normalMatrix = mat3.create();
     mat4.toInverseMat3(mvMatrix, normalMatrix);
@@ -108,20 +115,20 @@ function initShaders() {
     var vertexShader = getShader(gl, "shader-vs");
     var vertexShaderAttributes = ExtractUniformsFromShaderSource(vertexShader.source);
 
-    console.log("Fragment shader's uniforms:", fragmentShaderAttributes, "Vertex shader's uniforms:", vertexShaderAttributes);    
-  
-    // Create the shader program  
+    if(debugMode) console.log("Fragment shader's uniforms:", fragmentShaderAttributes, "Vertex shader's uniforms:", vertexShaderAttributes);
+
+    // Create the shader program
     window.shaderProgram = gl.createProgram();
     gl.attachShader(shaderProgram, vertexShader.shader);
     gl.attachShader(shaderProgram, fragmentShader.shader);
     gl.linkProgram(shaderProgram);
-  
+
     // If creating the shader program failed, alert
     if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) {
         alert("Unable to initialize the shader program.");
     }
-  
-    gl.useProgram(shaderProgram);  
+
+    gl.useProgram(shaderProgram);
 
     shaderProgram.vertexPositionAttribute = gl.getAttribLocation(shaderProgram, "aVertexPosition");
     gl.enableVertexAttribArray(shaderProgram.vertexPositionAttribute);
@@ -130,7 +137,7 @@ function initShaders() {
     gl.enableVertexAttribArray(shaderProgram.textureCoordAttribute);
 
     shaderProgram.vertexNormalAttribute = gl.getAttribLocation(shaderProgram, "aVertexNormal");
-    gl.enableVertexAttribArray(shaderProgram.vertexNormalAttribute);            
+    gl.enableVertexAttribArray(shaderProgram.vertexNormalAttribute);
 
     // Apply vertex shader uniforms
     for (var i = 0; i < vertexShaderAttributes.length; i++) {
@@ -148,38 +155,38 @@ function initShaders() {
  */
 function getShader(gl, id) {
     var shaderScript = document.getElementById(id);
-  
-    // Didn't find an element with the specified ID; abort.  
+
+    // Didn't find an element with the specified ID; abort.
     if (!shaderScript) {
         return null;
     }
-  
-    // Walk through the source element's children, building the shader source string.  
+
+    // Walk through the source element's children, building the shader source string.
     var theSource = "";
     var currentChild = shaderScript.firstChild;
-  
+
     while(currentChild) {
         if (currentChild.nodeType == 3) {
             theSource += currentChild.textContent;
         }
-    
+
         currentChild = currentChild.nextSibling;
     }
     // Eventualy load external file via AJAX call
-    if(!currentChild && shaderScript.src){    
+    if(!currentChild && shaderScript.src){
         var xmlhttp = new XMLHttpRequest();
-        xmlhttp.open("GET", shaderScript.src, false);    
+        xmlhttp.open("GET", shaderScript.src, false);
         xmlhttp.onreadystatechange = function(){
             if (xmlhttp.readyState == 4 && xmlhttp.status == 200){
                 theSource = xmlhttp.responseText;
             }
         }
         xmlhttp.send();
-    }  
-  
-    // Now figure out what type of shader script we have, based on its MIME type.  
+    }
+
+    // Now figure out what type of shader script we have, based on its MIME type.
     var shader;
-  
+
     if (shaderScript.type == "x-shader/x-fragment") {
         shader = gl.createShader(gl.FRAGMENT_SHADER);
     } else if (shaderScript.type == "x-shader/x-vertex") {
@@ -187,19 +194,19 @@ function getShader(gl, id) {
     } else {
         return null;  // Unknown shader type
     }
-  
-    // Send the source to the shader object  
+
+    // Send the source to the shader object
     gl.shaderSource(shader, theSource);
-  
-    // Compile the shader program  
+
+    // Compile the shader program
     gl.compileShader(shader);
-  
-    // See if it compiled successfully  
+
+    // See if it compiled successfully
     if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
         alert("An error occurred compiling the shaders: " + gl.getShaderInfoLog(shader));
         return null;
     }
-  
+
     return {shader:shader, source:theSource};
 }
 
