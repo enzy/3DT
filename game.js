@@ -22,7 +22,7 @@ Game = Class({
         var whiteTexture = new Texture('#FFFFFF', '#FFFFFF');
 
         // Create a floor shape #0
-        this.addShape(new Cube(this.width, 0.1, this.height, new VideoTexture()));
+        this.addShape(new Cube(this.width, 0.1, this.height, new ImageTexture(document.getElementById('floor'))));
 
         // Create a brick shape #1
         this.addShape(new Cube(1, 1, 1, new Texture('#00FFFF', '#000000')));
@@ -38,13 +38,14 @@ Game = Class({
         this.addShape(new Pyramid(0.5, 2, 0.5, new Texture('#FFDD00', '#FFDD00')));
 
         // Skybox shape #6
-        var skybox = new Cube(this.width+1, this.elevation/2+1, this.height+1, whiteTexture);
+        var skybox = new Skybox(100,100,100,new ImageTexture(document.getElementById('skybox')));
         skybox.setFlipSided();
         this.addShape(skybox);
         this.shapeInstances.push({
             shape: 6,
             location: [0, this.elevation/2, 0],
-            angle: [0, 0, 0]
+            angle: [0, 0, 0],
+            skybox: true
         });
 
 
@@ -224,7 +225,14 @@ Game = Class({
                 // Single shape
                 mvPushMatrix();
                 this.applyShapeInstance(shapeInstances[i], false);
-                this.shapes[shapeInstances[i].shape].render();
+                // Skybox toogle
+                if(shapeInstances[i].skybox !== true){
+                    this.shapes[shapeInstances[i].shape].render();
+                } else {
+                    if(backgroundToogle){
+                        this.shapes[shapeInstances[i].shape].render();
+                    }
+                }
                 mvPopMatrix();
             }
 

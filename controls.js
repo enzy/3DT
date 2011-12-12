@@ -91,20 +91,25 @@ function toogleMadLights(){
 }
 
 function handleKeyPress(event){
+    console.log(event.keyCode, event.charCode);
     switch (event.keyCode) {
         case 38:
+        case 119:
             // up
             nextMoveZ--;
             break;
         case 40:
+        case 115:
             // down
             nextMoveZ++;
             break;
         case 37:
+        case 97:
             // left
             nextMoveX--;
             break;
         case 39:
+        case 100:
             // Right
             nextMoveX++;
             break;

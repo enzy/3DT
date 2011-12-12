@@ -82,6 +82,8 @@ Shape = Class({
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.glVertices), gl.STATIC_DRAW);
         this.glPositionBuffer.itemSize = 3;
 
+        if(debugMode) console.log(this.glIndices);
+
         this.glVertexIndexBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.glVertexIndexBuffer);
         gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(this.glIndices), gl.STATIC_DRAW);
@@ -246,5 +248,17 @@ Star = Class(Shape, {
         }
 
         this.createBuffers();
+    }
+});
+
+Skybox = Class(Cube, {
+    /*
+     * Add a normal to a gl list
+     */
+    addNormal: function(normal) {
+        normal = vec3.negate(normal);
+        this.glNormals.push(normal[0]);
+        this.glNormals.push(normal[1]);
+        this.glNormals.push(normal[2]);
     }
 });

@@ -67,7 +67,7 @@
 			"file": "init.js",
 			"settings":
 			{
-				"buffer_size": 7954,
+				"buffer_size": 6590,
 				"line_ending": "Unix"
 			}
 		},
@@ -75,7 +75,7 @@
 			"file": "lights.js",
 			"settings":
 			{
-				"buffer_size": 1209,
+				"buffer_size": 3639,
 				"line_ending": "Unix"
 			}
 		},
@@ -83,7 +83,7 @@
 			"file": "shapes.js",
 			"settings":
 			{
-				"buffer_size": 12018,
+				"buffer_size": 13063,
 				"line_ending": "Unix"
 			}
 		},
@@ -91,7 +91,92 @@
 			"file": "game.js",
 			"settings":
 			{
-				"buffer_size": 4073,
+				"buffer_size": 9569,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "shader.vert",
+			"settings":
+			{
+				"buffer_size": 1389,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"contents": "diff --git a/shader.vert b/shader.vert\nindex 6c511ce..0b35315 100644\n--- a/shader.vert\n+++ b/shader.vert\n@@ -10,21 +10,33 @@ uniform vec3 uAmbientColor;\n uniform vec3 uLightingLocation;\n uniform vec3 uLightingColor;\n \n+uniform float uInnerAngle;\n+uniform float uOuterAngle;\n \n varying vec2 vTextureCoord;\n varying vec3 vLightWeighting;\n \n-attribute vec4 aVertexColor;\n-\n void main(void) {  \n     vec4 mvPosition = uMVMatrix  * vec4(aVertexPosition, 1.0);\n     gl_Position = uPMatrix * mvPosition;\n     vTextureCoord = aTextureCoord;\n             \n     vec3 lightDirection = normalize(uLightingLocation - mvPosition.xyz);\n+    vec4 transformedNormal = uNMatrix * aVertexNormal;\n \n-    vec3 transformedNormal = uNMatrix * aVertexNormal;\n     float directionalLightWeighting = max(dot(transformedNormal, lightDirection), 0.0);\n+\n     vLightWeighting = uAmbientColor + uLightingColor * directionalLightWeighting;    \n+    \n+    float diff = acos(dot(lightDirection, normalize(uPointLightingDirection)));\n+\n+    if (diff < uInnerAngle){\n+        lightWeighting += uLightingColor * directionalLightWeighting;\n+    }\n+    else if (diff <= uOuterAngle) {\n+        // scalingFactor - gives a gradient between two circles\n+        float c = (uOuterAngle - diff) / (uOuterAngle - uInnerAngle);\n+        lightWeighting += uLightingColor * directionalLightWeighting * vec3(c,c,c);\n+    }\n   \n }\n\\ No newline at end of file\n",
+			"settings":
+			{
+				"buffer_size": 1410,
+				"line_ending": "Unix",
+				"name": "Git Diff",
+				"read_only": true,
+				"scratch": true
+			}
+		},
+		{
+			"file": "shader.frag",
+			"settings":
+			{
+				"buffer_size": 324,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"contents": "Searching 24 files for \"sceneRotationMatrix\" (case sensitive)\n\nC:\\School\\PGR\\3DT\\3DT.sublime-workspace:\n  458  			\"ShadowOverlay\",\n  459  			\"cubeAngle\",\n  460: 			\"sceneRotationMatrix\",\n  461  			\"useLightingUniform\",\n  462  			\"uUseLighting\",\n\nC:\\School\\PGR\\3DT\\controls.js:\n   35      mat4.rotateY(mvMatrix, degToRad(deltaY));\n   36  \n   37:     //mat4.multiply(newRotationMatrix, sceneRotationMatrix, sceneRotationMatrix);\n   38  \n   39      lastMouseX = newX\n\nC:\\School\\PGR\\3DT\\init.js:\n   44      document.onmousemove = handleMouseMove;\n   45  \n   46:     var sceneRotationMatrix = mat4.create();\n   47:     mat4.identity(sceneRotationMatrix);\n   48  \n   49      var lastTime = 0;  \n   ..\n   85      gl.uniformMatrix4fv(shaderProgram.uPMatrix, false, pMatrix);\n   86      gl.uniformMatrix4fv(shaderProgram.uMVMatrix, false, mvMatrix);\n   87:     gl.uniformMatrix4fv(shaderProgram.uSceneMatrix, false, sceneRotationMatrix);\n   88  \n   89      var normalMatrix = mat3.create();\n\n6 matches across 3 files\n\n\nSearching 24 files for \"mvMatrixStack\" (case sensitive)\n\nC:\\School\\PGR\\3DT\\init.js:\n   37       */  \n   38      var mvMatrix = mat4.create();\n   39:     var mvMatrixStack = [];\n   40      var pMatrix = mat4.create();\n   41  \n\nC:\\School\\PGR\\3DT\\utils.js:\n   93      var copy = mat4.create();\n   94      mat4.set(mvMatrix, copy);\n   95:     mvMatrixStack.push(copy);\n   96  }\n   97  \n   98  function mvPopMatrix() {\n   99:     if (mvMatrixStack.length == 0) {\n  100          throw \"Invalid popMatrix!\";\n  101      }\n  102:     mvMatrix = mvMatrixStack.pop();\n  103  }\n  104  \n\n4 matches across 2 files\n\n\nSearching 442 files for \"flipSided\n	\" (case sensitive)\n\n0 matches\n\nSearching 442 files for \"flipSided\" (case sensitive)\n\nW:\\_resources\\JavaScript\\three.js\\README.md:\n  249  * Renamed `QuakeCamera` to `FirstPersonCamera`. ([chriskillpack](http://github.com/chriskillpack))\n  250  * Improved Normal Map Shader. ([alteredq](http://github.com/alteredq))\n  251: * `Collision` now supports `Object3D.flipSided` and `Object3D.doubleSided`. ([NINE78](http://github.com/NINE78))\n  252  * Removed most of `SceneUtils` methods. ([mrdoob](http://github.com/mrdoob))\n  253  * Removed `Sound` object and `SoundRenderer`. ([mrdoob](http://github.com/mrdoob))\n  ...\n  431  \n  432  * Using new object `UV` instead of `Vector2` where it should be used\n  433: * Added `Mesh.flipSided` boolean (false by default)\n  434  * `CanvasRenderer` was handling UVs at 1,1 as bitmapWidth, bitmapHeight (instead of bitmapWidth - 1, bitmapHeight - 1)\n  435  * `ParticleBitmapMaterial.offset` added\n\nW:\\_resources\\JavaScript\\three.js\\build\\Three.js:\n   19  c,d=[];b=0;for(c=a.length;b<c;b++)Array.prototype.push.apply(d,this.intersectObject(a[b]));d.sort(function(a,b){return a.distance-b.distance});return d};var g=new THREE.Vector3,f=new THREE.Vector3,e=new THREE.Vector3,h=new THREE.Vector3,a=new THREE.Vector3,c=new THREE.Vector3,i=new THREE.Vector3,l=new THREE.Vector3,k=new THREE.Vector3;this.intersectObject=function(m){for(var n,o=[],p=0,r=m.children.length;p<r;p++)Array.prototype.push.apply(o,this.intersectObject(m.children[p]));if(m instanceof THREE.Particle){p=\n   20  b(this.origin,this.direction,m.matrixWorld.getPosition());if(p===null||p>m.scale.x)return[];n={distance:p,point:m.position,face:null,object:m};o.push(n)}else if(m instanceof THREE.Mesh){p=b(this.origin,this.direction,m.matrixWorld.getPosition());if(p===null||p>m.geometry.boundingSphere.radius*Math.max(m.scale.x,Math.max(m.scale.y,m.scale.z)))return o;var q,t=m.geometry,w=t.vertices,u;m.matrixRotationWorld.extractRotation(m.matrixWorld);p=0;for(r=t.faces.length;p<r;p++)if(n=t.faces[p],a.copy(this.origin),\n   21: c.copy(this.direction),u=m.matrixWorld,i=u.multiplyVector3(i.copy(n.centroid)).subSelf(a),q=i.dot(c),!(q<=0)&&(g=u.multiplyVector3(g.copy(w[n.a].position)),f=u.multiplyVector3(f.copy(w[n.b].position)),e=u.multiplyVector3(e.copy(w[n.c].position)),n instanceof THREE.Face4&&(h=u.multiplyVector3(h.copy(w[n.d].position))),l=m.matrixRotationWorld.multiplyVector3(l.copy(n.normal)),q=c.dot(l),m.doubleSided||(m.flipSided?q>0:q<0)))if(q=l.dot(i.sub(g,a))/q,k.add(a,c.multiplyScalar(q)),n instanceof THREE.Face3)d(k,\n   22  g,f,e)&&(n={distance:a.distanceTo(k),point:k.clone(),face:n,object:m},o.push(n));else if(n instanceof THREE.Face4&&(d(k,g,f,h)||d(k,f,e,h)))n={distance:a.distanceTo(k),point:k.clone(),face:n,object:m},o.push(n)}return o};var o=new THREE.Vector3,p=new THREE.Vector3,m=new THREE.Vector3,r,n,q,t,w,u,B,F,A,x,y};\n   23  THREE.Rectangle=function(){function a(){f=d-c;e=g-b}var c,b,d,g,f,e,h=!0;this.getX=function(){return c};this.getY=function(){return b};this.getWidth=function(){return f};this.getHeight=function(){return e};this.getLeft=function(){return c};this.getTop=function(){return b};this.getRight=function(){return d};this.getBottom=function(){return g};this.set=function(f,e,k,o){h=!1;c=f;b=e;d=k;g=o;a()};this.addPoint=function(f,e){h?(h=!1,c=f,b=e,d=f,g=e):(c=c<f?c:f,b=b<e?b:e,d=d>f?d:f,g=g>e?g:e);a()};this.add3Points=\n   ..\n   50  THREE.Matrix4.makeFrustum=function(a,c,b,d,g,f){var e;e=new THREE.Matrix4;e.n11=2*g/(c-a);e.n12=0;e.n13=(c+a)/(c-a);e.n14=0;e.n21=0;e.n22=2*g/(d-b);e.n23=(d+b)/(d-b);e.n24=0;e.n31=0;e.n32=0;e.n33=-(f+g)/(f-g);e.n34=-2*f*g/(f-g);e.n41=0;e.n42=0;e.n43=-1;e.n44=0;return e};THREE.Matrix4.makePerspective=function(a,c,b,d){var g,a=b*Math.tan(a*Math.PI/360);g=-a;return THREE.Matrix4.makeFrustum(g*c,a*c,g,a,b,d)};\n   51  THREE.Matrix4.makeOrtho=function(a,c,b,d,g,f){var e,h,i,l;e=new THREE.Matrix4;h=c-a;i=b-d;l=f-g;e.n11=2/h;e.n12=0;e.n13=0;e.n14=-((c+a)/h);e.n21=0;e.n22=2/i;e.n23=0;e.n24=-((b+d)/i);e.n31=0;e.n32=0;e.n33=-2/l;e.n34=-((f+g)/l);e.n41=0;e.n42=0;e.n43=0;e.n44=1;return e};THREE.Matrix4.__v1=new THREE.Vector3;THREE.Matrix4.__v2=new THREE.Vector3;THREE.Matrix4.__v3=new THREE.Vector3;THREE.Matrix4.__m1=new THREE.Matrix4;THREE.Matrix4.__m2=new THREE.Matrix4;\n   52: THREE.Object3D=function(){this.name=\"\";this.id=THREE.Object3DCount++;this.parent=void 0;this.children=[];this.up=new THREE.Vector3(0,1,0);this.position=new THREE.Vector3;this.rotation=new THREE.Vector3;this.eulerOrder=\"XYZ\";this.scale=new THREE.Vector3(1,1,1);this.flipSided=this.doubleSided=this.dynamic=!1;this.renderDepth=null;this.rotationAutoUpdate=!0;this.matrix=new THREE.Matrix4;this.matrixWorld=new THREE.Matrix4;this.matrixRotationWorld=new THREE.Matrix4;this.matrixWorldNeedsUpdate=this.matrixAutoUpdate=\n   53  !0;this.quaternion=new THREE.Quaternion;this.useQuaternion=!1;this.boundRadius=0;this.boundRadiusScale=1;this.visible=!0;this.receiveShadow=this.castShadow=!1;this.frustumCulled=!0;this._vector=new THREE.Vector3};\n   54  THREE.Object3D.prototype={constructor:THREE.Object3D,translate:function(a,c){this.matrix.rotateAxis(c);this.position.addSelf(c.multiplyScalar(a))},translateX:function(a){this.translate(a,this._vector.set(1,0,0))},translateY:function(a){this.translate(a,this._vector.set(0,1,0))},translateZ:function(a){this.translate(a,this._vector.set(0,0,1))},lookAt:function(a){this.matrix.lookAt(a,this.position,this.up);this.rotationAutoUpdate&&this.rotation.setRotationFromMatrix(this.matrix)},add:function(a){if(this.children.indexOf(a)===\n   ..\n   63  F.objects.sort(b);return F};this.projectScene=function(a,g,f){var e=g.near,J=g.far,A,H,G,I,M,S,ba,W,j,X,V,da,ga,$,ua,ra;u=q=m=o=0;F.elements.length=0;g.parent===void 0&&(console.warn(\"DEPRECATED: Camera hasn't been added to a Scene. Adding it...\"),a.add(g));a.updateMatrixWorld();g.matrixWorldInverse.getInverse(g.matrixWorld);y.multiply(g.projectionMatrix,g.matrixWorldInverse);this.computeFrustum(y);F=this.projectGraph(a,!1);a=0;for(A=F.objects.length;a<A;a++)if(j=F.objects[a].object,X=j.matrixWorld,\n   64  da=j.material,i=0,j instanceof THREE.Mesh){V=j.geometry;ga=j.geometry.materials;I=V.vertices;$=V.faces;ua=V.faceVertexUvs;V=j.matrixRotationWorld.extractRotation(X);H=0;for(G=I.length;H<G;H++)h=c(),h.positionWorld.copy(I[H].position),X.multiplyVector3(h.positionWorld),h.positionScreen.copy(h.positionWorld),y.multiplyVector4(h.positionScreen),h.positionScreen.x/=h.positionScreen.w,h.positionScreen.y/=h.positionScreen.w,h.visible=h.positionScreen.z>e&&h.positionScreen.z<J;I=0;for(H=$.length;I<H;I++){G=\n   65: $[I];if(G instanceof THREE.Face3)if(M=l[G.a],S=l[G.b],ba=l[G.c],M.visible&&S.visible&&ba.visible&&(j.doubleSided||j.flipSided!=(ba.positionScreen.x-M.positionScreen.x)*(S.positionScreen.y-M.positionScreen.y)-(ba.positionScreen.y-M.positionScreen.y)*(S.positionScreen.x-M.positionScreen.x)<0))W=p[o]=p[o]||new THREE.RenderableFace3,o++,k=W,k.v1.copy(M),k.v2.copy(S),k.v3.copy(ba);else continue;else if(G instanceof THREE.Face4)if(M=l[G.a],S=l[G.b],ba=l[G.c],W=l[G.d],M.visible&&S.visible&&ba.visible&&W.visible&&\n   66: (j.doubleSided||j.flipSided!=((W.positionScreen.x-M.positionScreen.x)*(S.positionScreen.y-M.positionScreen.y)-(W.positionScreen.y-M.positionScreen.y)*(S.positionScreen.x-M.positionScreen.x)<0||(S.positionScreen.x-ba.positionScreen.x)*(W.positionScreen.y-ba.positionScreen.y)-(S.positionScreen.y-ba.positionScreen.y)*(W.positionScreen.x-ba.positionScreen.x)<0)))ra=r[m]=r[m]||new THREE.RenderableFace4,m++,k=ra,k.v1.copy(M),k.v2.copy(S),k.v3.copy(ba),k.v4.copy(W);else continue;k.normalWorld.copy(G.normal);\n   67  V.multiplyVector3(k.normalWorld);k.centroidWorld.copy(G.centroid);X.multiplyVector3(k.centroidWorld);k.centroidScreen.copy(k.centroidWorld);y.multiplyVector3(k.centroidScreen);ba=G.vertexNormals;M=0;for(S=ba.length;M<S;M++)W=k.vertexNormalsWorld[M],W.copy(ba[M]),V.multiplyVector3(W);M=0;for(S=ua.length;M<S;M++)if(ra=ua[M][I]){ba=0;for(W=ra.length;ba<W;ba++)k.uvs[M][ba]=ra[ba]}k.material=da;k.faceMaterial=G.materialIndex!==null?ga[G.materialIndex]:null;k.z=k.centroidScreen.z;F.elements.push(k)}}else if(j instanceof\n   68  THREE.Line){v.multiply(y,X);I=j.geometry.vertices;M=c();M.positionScreen.copy(I[0].position);v.multiplyVector4(M.positionScreen);H=1;for(G=I.length;H<G;H++)if(M=c(),M.positionScreen.copy(I[H].position),v.multiplyVector4(M.positionScreen),S=l[i-2],s.copy(M.positionScreen),E.copy(S.positionScreen),d(s,E))s.multiplyScalar(1/s.w),E.multiplyScalar(1/E.w),j=t[q]=t[q]||new THREE.RenderableLine,q++,n=j,n.v1.positionScreen.copy(s),n.v2.positionScreen.copy(E),n.z=Math.max(s.z,E.z),n.material=da,F.elements.push(n)}a=\n   ..\n  258  l.__webglTexture)):E(k,h)}else if(o===\"tv\"){if(!l._array){l._array=[];o=0;for(p=l.texture.length;o<p;o++)l._array[o]=h+o}j.uniform1iv(k,l._array);o=0;for(p=l.texture.length;o<p;o++)(k=l.texture[o])&&E(k,l._array[o])}(d instanceof THREE.ShaderMaterial||d instanceof THREE.MeshPhongMaterial||d.envMap)&&e.cameraPosition!==null&&j.uniform3f(e.cameraPosition,a.position.x,a.position.y,a.position.z);(d instanceof THREE.MeshPhongMaterial||d instanceof THREE.MeshLambertMaterial||d instanceof THREE.ShaderMaterial||\n  259  d.skinning)&&e.viewMatrix!==null&&j.uniformMatrix4fv(e.viewMatrix,!1,la);d.skinning&&(j.uniformMatrix4fv(e.cameraInverseMatrix,!1,la),j.uniformMatrix4fv(e.boneGlobalMatrices,!1,g.boneMatrices))}j.uniformMatrix4fv(e.modelViewMatrix,!1,g._modelViewMatrixArray);e.normalMatrix&&j.uniformMatrix3fv(e.normalMatrix,!1,g._normalMatrixArray);(d instanceof THREE.ShaderMaterial||d.envMap||d.skinning||g.receiveShadow)&&e.objectMatrix!==null&&j.uniformMatrix4fv(e.objectMatrix,!1,g._objectMatrixArray);return f}\n  260: function B(a,b,c){a._modelViewMatrix.multiplyToArray(b.matrixWorldInverse,a.matrixWorld,a._modelViewMatrixArray);c&&THREE.Matrix4.makeInvert3x3(a._modelViewMatrix).transposeIntoArray(a._normalMatrixArray)}function F(a){if(ra!==a.doubleSided)a.doubleSided?j.disable(j.CULL_FACE):j.enable(j.CULL_FACE),ra=a.doubleSided;if(qa!==a.flipSided)a.flipSided?j.frontFace(j.CW):j.frontFace(j.CCW),qa=a.flipSided}function A(a){oa!==a&&(a?j.enable(j.DEPTH_TEST):j.disable(j.DEPTH_TEST),oa=a)}function x(a){pa!==a&&\n  261  (j.depthMask(a),pa=a)}function y(a,b,c){Da!==a&&(a?j.enable(j.POLYGON_OFFSET_FILL):j.disable(j.POLYGON_OFFSET_FILL),Da=a);if(a&&(za!==b||Aa!==c))j.polygonOffset(b,c),za=b,Aa=c}function v(a){if(a!==na){switch(a){case THREE.AdditiveBlending:j.blendEquation(j.FUNC_ADD);j.blendFunc(j.SRC_ALPHA,j.ONE);break;case THREE.SubtractiveBlending:j.blendEquation(j.FUNC_ADD);j.blendFunc(j.ZERO,j.ONE_MINUS_SRC_COLOR);break;case THREE.MultiplyBlending:j.blendEquation(j.FUNC_ADD);j.blendFunc(j.ZERO,j.SRC_COLOR);break;\n  262  default:j.blendEquationSeparate(j.FUNC_ADD,j.FUNC_ADD),j.blendFuncSeparate(j.SRC_ALPHA,j.ONE_MINUS_SRC_ALPHA,j.ONE,j.ONE_MINUS_SRC_ALPHA)}na=a}}function J(a,b){var c;a===\"fragment\"?c=j.createShader(j.FRAGMENT_SHADER):a===\"vertex\"&&(c=j.createShader(j.VERTEX_SHADER));j.shaderSource(c,b);j.compileShader(c);if(!j.getShaderParameter(c,j.COMPILE_STATUS))return console.error(j.getShaderInfoLog(c)),console.error(b),null;return c}function s(a,b,c){return(c.width&c.width-1)===0&&(c.height&c.height-1)===0?\n  ...\n  368  c.duration=a.duration,c.mirroredLoop=a.mirroredLoop,c.time=a.time,c.lastKeyframe=a.lastKeyframe,c.currentKeyframe=a.currentKeyframe,c.direction=a.direction,c.directionBackwards=a.directionBackwards):a instanceof THREE.SkinnedMesh?c=new THREE.SkinnedMesh(a.geometry,a.material):a instanceof THREE.Mesh?c=new THREE.Mesh(a.geometry,a.material):a instanceof THREE.Line?c=new THREE.Line(a.geometry,a.material,a.type):a instanceof THREE.Ribbon?c=new THREE.Ribbon(a.geometry,a.material):a instanceof THREE.ParticleSystem?\n  369  (c=new THREE.ParticleSystem(a.geometry,a.material),c.sortParticles=a.sortParticles):a instanceof THREE.Particle?c=new THREE.Particle(a.material):a instanceof THREE.Sprite?(c=new THREE.Sprite({}),c.color.copy(a.color),c.map=a.map,c.blending=a.blending,c.useScreenCoordinates=a.useScreenCoordinates,c.mergeWith3D=a.mergeWith3D,c.affectedByDistance=a.affectedByDistance,c.scaleByViewport=a.scaleByViewport,c.alignment=a.alignment,c.rotation3d.copy(a.rotation3d),c.rotation=a.rotation,c.opacity=a.opacity,\n  370: c.uvOffset.copy(a.uvOffset),c.uvScale.copy(a.uvScale)):a instanceof THREE.LOD?c=new THREE.LOD:a instanceof THREE.MarchingCubes?(c=new THREE.MarchingCubes(a.resolution,a.material),c.field.set(a.field),c.isolation=a.isolation):a instanceof THREE.Object3D&&(c=new THREE.Object3D);c.parent=a.parent;c.up.copy(a.up);c.position.copy(a.position);c.rotation instanceof THREE.Vector3&&c.rotation.copy(a.rotation);c.eulerOrder=a.eulerOrder;c.scale.copy(a.scale);c.dynamic=a.dynamic;c.doubleSided=a.doubleSided;c.flipSided=\n  371: a.flipSided;c.renderDepth=a.renderDepth;c.rotationAutoUpdate=a.rotationAutoUpdate;c.matrix.copy(a.matrix);c.matrixWorld.copy(a.matrixWorld);c.matrixRotationWorld.copy(a.matrixRotationWorld);c.matrixAutoUpdate=a.matrixAutoUpdate;c.matrixWorldNeedsUpdate=a.matrixWorldNeedsUpdate;c.quaternion.copy(a.quaternion);c.useQuaternion=a.useQuaternion;c.boundRadius=a.boundRadius;c.boundRadiusScale=a.boundRadiusScale;c.visible=a.visible;c.castShadow=a.castShadow;c.receiveShadow=a.receiveShadow;c.frustumCulled=\n  372  a.frustumCulled;for(var b=0;b<a.children.length;b++){var d=THREE.SceneUtils.cloneObject(a.children[b]);c.children[b]=d;d.parent=c}if(a instanceof THREE.LOD)for(b=0;b<a.LODs.length;b++)c.LODs[b]={visibleAtDistance:a.LODs[b].visibleAtDistance,object3D:c.children[b]};return c}};\n  373  if(THREE.WebGLRenderer)THREE.ShaderUtils={lib:{fresnel:{uniforms:{mRefractionRatio:{type:\"f\",value:1.02},mFresnelBias:{type:\"f\",value:0.1},mFresnelPower:{type:\"f\",value:2},mFresnelScale:{type:\"f\",value:1},tCube:{type:\"t\",value:1,texture:null}},fragmentShader:\"uniform samplerCube tCube;\\nvarying vec3 vReflect;\\nvarying vec3 vRefract[3];\\nvarying float vReflectionFactor;\\nvoid main() {\\nvec4 reflectedColor = textureCube( tCube, vec3( -vReflect.x, vReflect.yz ) );\\nvec4 refractedColor = vec4( 1.0, 1.0, 1.0, 1.0 );\\nrefractedColor.r = textureCube( tCube, vec3( -vRefract[0].x, vRefract[0].yz ) ).r;\\nrefractedColor.g = textureCube( tCube, vec3( -vRefract[1].x, vRefract[1].yz ) ).g;\\nrefractedColor.b = textureCube( tCube, vec3( -vRefract[2].x, vRefract[2].yz ) ).b;\\nrefractedColor.a = 1.0;\\ngl_FragColor = mix( refractedColor, reflectedColor, clamp( vReflectionFactor, 0.0, 1.0 ) );\\n}\",\n\nW:\\_resources\\JavaScript\\three.js\\build\\custom\\ThreeCanvas.js:\n   18  c,d=[];b=0;for(c=a.length;b<c;b++)Array.prototype.push.apply(d,this.intersectObject(a[b]));d.sort(function(a,b){return a.distance-b.distance});return d};var f=new THREE.Vector3,e=new THREE.Vector3,g=new THREE.Vector3,h=new THREE.Vector3,a=new THREE.Vector3,b=new THREE.Vector3,m=new THREE.Vector3,l=new THREE.Vector3,j=new THREE.Vector3;this.intersectObject=function(k){for(var i,o=[],n=0,W=k.children.length;n<W;n++)Array.prototype.push.apply(o,this.intersectObject(k.children[n]));if(k instanceof THREE.Particle){n=\n   19  c(this.origin,this.direction,k.matrixWorld.getPosition());if(n===null||n>k.scale.x)return[];i={distance:n,point:k.position,face:null,object:k};o.push(i)}else if(k instanceof THREE.Mesh){n=c(this.origin,this.direction,k.matrixWorld.getPosition());if(n===null||n>k.geometry.boundingSphere.radius*Math.max(k.scale.x,Math.max(k.scale.y,k.scale.z)))return o;var p,G=k.geometry,H=G.vertices,I;k.matrixRotationWorld.extractRotation(k.matrixWorld);n=0;for(W=G.faces.length;n<W;n++)if(i=G.faces[n],a.copy(this.origin),\n   20: b.copy(this.direction),I=k.matrixWorld,m=I.multiplyVector3(m.copy(i.centroid)).subSelf(a),p=m.dot(b),!(p<=0)&&(f=I.multiplyVector3(f.copy(H[i.a].position)),e=I.multiplyVector3(e.copy(H[i.b].position)),g=I.multiplyVector3(g.copy(H[i.c].position)),i instanceof THREE.Face4&&(h=I.multiplyVector3(h.copy(H[i.d].position))),l=k.matrixRotationWorld.multiplyVector3(l.copy(i.normal)),p=b.dot(l),k.doubleSided||(k.flipSided?p>0:p<0)))if(p=l.dot(m.sub(f,a))/p,j.add(a,b.multiplyScalar(p)),i instanceof THREE.Face3)d(j,\n   21  f,e,g)&&(i={distance:a.distanceTo(j),point:j.clone(),face:i,object:k},o.push(i));else if(i instanceof THREE.Face4&&(d(j,f,e,h)||d(j,e,g,h)))i={distance:a.distanceTo(j),point:j.clone(),face:i,object:k},o.push(i)}return o};var i=new THREE.Vector3,n=new THREE.Vector3,o=new THREE.Vector3,p,k,s,K,C,Q,O,w,F,z,D};\n   22  THREE.Rectangle=function(){function a(){e=d-b;g=f-c}var b,c,d,f,e,g,h=!0;this.getX=function(){return b};this.getY=function(){return c};this.getWidth=function(){return e};this.getHeight=function(){return g};this.getLeft=function(){return b};this.getTop=function(){return c};this.getRight=function(){return d};this.getBottom=function(){return f};this.set=function(e,g,j,i){h=!1;b=e;c=g;d=j;f=i;a()};this.addPoint=function(e,g){h?(h=!1,b=e,c=g,d=e,f=g):(b=b<e?b:e,c=c<g?c:g,d=d>e?d:e,f=f>g?f:g);a()};this.add3Points=\n   ..\n   49  THREE.Matrix4.makeFrustum=function(a,b,c,d,f,e){var g;g=new THREE.Matrix4;g.n11=2*f/(b-a);g.n12=0;g.n13=(b+a)/(b-a);g.n14=0;g.n21=0;g.n22=2*f/(d-c);g.n23=(d+c)/(d-c);g.n24=0;g.n31=0;g.n32=0;g.n33=-(e+f)/(e-f);g.n34=-2*e*f/(e-f);g.n41=0;g.n42=0;g.n43=-1;g.n44=0;return g};THREE.Matrix4.makePerspective=function(a,b,c,d){var f,a=c*Math.tan(a*Math.PI/360);f=-a;return THREE.Matrix4.makeFrustum(f*b,a*b,f,a,c,d)};\n   50  THREE.Matrix4.makeOrtho=function(a,b,c,d,f,e){var g,h,m,l;g=new THREE.Matrix4;h=b-a;m=c-d;l=e-f;g.n11=2/h;g.n12=0;g.n13=0;g.n14=-((b+a)/h);g.n21=0;g.n22=2/m;g.n23=0;g.n24=-((c+d)/m);g.n31=0;g.n32=0;g.n33=-2/l;g.n34=-((e+f)/l);g.n41=0;g.n42=0;g.n43=0;g.n44=1;return g};THREE.Matrix4.__v1=new THREE.Vector3;THREE.Matrix4.__v2=new THREE.Vector3;THREE.Matrix4.__v3=new THREE.Vector3;THREE.Matrix4.__m1=new THREE.Matrix4;THREE.Matrix4.__m2=new THREE.Matrix4;\n   51: THREE.Object3D=function(){this.name=\"\";this.id=THREE.Object3DCount++;this.parent=void 0;this.children=[];this.up=new THREE.Vector3(0,1,0);this.position=new THREE.Vector3;this.rotation=new THREE.Vector3;this.eulerOrder=\"XYZ\";this.scale=new THREE.Vector3(1,1,1);this.flipSided=this.doubleSided=this.dynamic=!1;this.renderDepth=null;this.rotationAutoUpdate=!0;this.matrix=new THREE.Matrix4;this.matrixWorld=new THREE.Matrix4;this.matrixRotationWorld=new THREE.Matrix4;this.matrixWorldNeedsUpdate=this.matrixAutoUpdate=\n   52  !0;this.quaternion=new THREE.Quaternion;this.useQuaternion=!1;this.boundRadius=0;this.boundRadiusScale=1;this.visible=!0;this.receiveShadow=this.castShadow=!1;this.frustumCulled=!0;this._vector=new THREE.Vector3};\n   53  THREE.Object3D.prototype={constructor:THREE.Object3D,translate:function(a,b){this.matrix.rotateAxis(b);this.position.addSelf(b.multiplyScalar(a))},translateX:function(a){this.translate(a,this._vector.set(1,0,0))},translateY:function(a){this.translate(a,this._vector.set(0,1,0))},translateZ:function(a){this.translate(a,this._vector.set(0,0,1))},lookAt:function(a){this.matrix.lookAt(a,this.position,this.up);this.rotationAutoUpdate&&this.rotation.setRotationFromMatrix(this.matrix)},add:function(a){if(this.children.indexOf(a)===\n   ..\n   62  w.objects.sort(c);return w};this.projectScene=function(a,e,f){var g=e.near,r=e.far,F,L,B,S,v,R,P,V,J,t,A,x,y,M,la,fa;Q=s=o=i=0;w.elements.length=0;e.parent===void 0&&(console.warn(\"DEPRECATED: Camera hasn't been added to a Scene. Adding it...\"),a.add(e));a.updateMatrixWorld();e.matrixWorldInverse.getInverse(e.matrixWorld);D.multiply(e.projectionMatrix,e.matrixWorldInverse);this.computeFrustum(D);w=this.projectGraph(a,!1);a=0;for(F=w.objects.length;a<F;a++)if(J=w.objects[a].object,t=J.matrixWorld,\n   63  x=J.material,m=0,J instanceof THREE.Mesh){A=J.geometry;y=J.geometry.materials;S=A.vertices;M=A.faces;la=A.faceVertexUvs;A=J.matrixRotationWorld.extractRotation(t);L=0;for(B=S.length;L<B;L++)h=b(),h.positionWorld.copy(S[L].position),t.multiplyVector3(h.positionWorld),h.positionScreen.copy(h.positionWorld),D.multiplyVector4(h.positionScreen),h.positionScreen.x/=h.positionScreen.w,h.positionScreen.y/=h.positionScreen.w,h.visible=h.positionScreen.z>g&&h.positionScreen.z<r;S=0;for(L=M.length;S<L;S++){B=\n   64: M[S];if(B instanceof THREE.Face3)if(v=l[B.a],R=l[B.b],P=l[B.c],v.visible&&R.visible&&P.visible&&(J.doubleSided||J.flipSided!=(P.positionScreen.x-v.positionScreen.x)*(R.positionScreen.y-v.positionScreen.y)-(P.positionScreen.y-v.positionScreen.y)*(R.positionScreen.x-v.positionScreen.x)<0))V=n[i]=n[i]||new THREE.RenderableFace3,i++,j=V,j.v1.copy(v),j.v2.copy(R),j.v3.copy(P);else continue;else if(B instanceof THREE.Face4)if(v=l[B.a],R=l[B.b],P=l[B.c],V=l[B.d],v.visible&&R.visible&&P.visible&&V.visible&&\n   65: (J.doubleSided||J.flipSided!=((V.positionScreen.x-v.positionScreen.x)*(R.positionScreen.y-v.positionScreen.y)-(V.positionScreen.y-v.positionScreen.y)*(R.positionScreen.x-v.positionScreen.x)<0||(R.positionScreen.x-P.positionScreen.x)*(V.positionScreen.y-P.positionScreen.y)-(R.positionScreen.y-P.positionScreen.y)*(V.positionScreen.x-P.positionScreen.x)<0)))fa=p[o]=p[o]||new THREE.RenderableFace4,o++,j=fa,j.v1.copy(v),j.v2.copy(R),j.v3.copy(P),j.v4.copy(V);else continue;j.normalWorld.copy(B.normal);\n   66  A.multiplyVector3(j.normalWorld);j.centroidWorld.copy(B.centroid);t.multiplyVector3(j.centroidWorld);j.centroidScreen.copy(j.centroidWorld);D.multiplyVector3(j.centroidScreen);P=B.vertexNormals;v=0;for(R=P.length;v<R;v++)V=j.vertexNormalsWorld[v],V.copy(P[v]),A.multiplyVector3(V);v=0;for(R=la.length;v<R;v++)if(fa=la[v][S]){P=0;for(V=fa.length;P<V;P++)j.uvs[v][P]=fa[P]}j.material=x;j.faceMaterial=B.materialIndex!==null?y[B.materialIndex]:null;j.z=j.centroidScreen.z;w.elements.push(j)}}else if(J instanceof\n   67  THREE.Line){u.multiply(D,t);S=J.geometry.vertices;v=b();v.positionScreen.copy(S[0].position);u.multiplyVector4(v.positionScreen);L=1;for(B=S.length;L<B;L++)if(v=b(),v.positionScreen.copy(S[L].position),u.multiplyVector4(v.positionScreen),R=l[m-2],E.copy(v.positionScreen),N.copy(R.positionScreen),d(E,N))E.multiplyScalar(1/E.w),N.multiplyScalar(1/N.w),J=K[s]=K[s]||new THREE.RenderableLine,s++,k=J,k.v1.positionScreen.copy(E),k.v2.positionScreen.copy(N),k.z=Math.max(E.z,N.z),k.material=x,w.elements.push(k)}a=\n\nW:\\_resources\\JavaScript\\three.js\\build\\custom\\ThreeDOM.js:\n   18  c,d=[];b=0;for(c=a.length;b<c;b++)Array.prototype.push.apply(d,this.intersectObject(a[b]));d.sort(function(a,b){return a.distance-b.distance});return d};var e=new THREE.Vector3,f=new THREE.Vector3,g=new THREE.Vector3,h=new THREE.Vector3,a=new THREE.Vector3,b=new THREE.Vector3,k=new THREE.Vector3,m=new THREE.Vector3,j=new THREE.Vector3;this.intersectObject=function(i){for(var l,n=[],o=0,P=i.children.length;o<P;o++)Array.prototype.push.apply(n,this.intersectObject(i.children[o]));if(i instanceof THREE.Particle){o=\n   19  c(this.origin,this.direction,i.matrixWorld.getPosition());if(o===null||o>i.scale.x)return[];l={distance:o,point:i.position,face:null,object:i};n.push(l)}else if(i instanceof THREE.Mesh){o=c(this.origin,this.direction,i.matrixWorld.getPosition());if(o===null||o>i.geometry.boundingSphere.radius*Math.max(i.scale.x,Math.max(i.scale.y,i.scale.z)))return n;var E,p=i.geometry,M=p.vertices,K;i.matrixRotationWorld.extractRotation(i.matrixWorld);o=0;for(P=p.faces.length;o<P;o++)if(l=p.faces[o],a.copy(this.origin),\n   20: b.copy(this.direction),K=i.matrixWorld,k=K.multiplyVector3(k.copy(l.centroid)).subSelf(a),E=k.dot(b),!(E<=0)&&(e=K.multiplyVector3(e.copy(M[l.a].position)),f=K.multiplyVector3(f.copy(M[l.b].position)),g=K.multiplyVector3(g.copy(M[l.c].position)),l instanceof THREE.Face4&&(h=K.multiplyVector3(h.copy(M[l.d].position))),m=i.matrixRotationWorld.multiplyVector3(m.copy(l.normal)),E=b.dot(m),i.doubleSided||(i.flipSided?E>0:E<0)))if(E=m.dot(k.sub(e,a))/E,j.add(a,b.multiplyScalar(E)),l instanceof THREE.Face3)d(j,\n   21  e,f,g)&&(l={distance:a.distanceTo(j),point:j.clone(),face:l,object:i},n.push(l));else if(l instanceof THREE.Face4&&(d(j,e,f,h)||d(j,f,g,h)))l={distance:a.distanceTo(j),point:j.clone(),face:l,object:i},n.push(l)}return n};var i=new THREE.Vector3,l=new THREE.Vector3,n=new THREE.Vector3,p,o,r,I,u,D,J,s,A,t,w};\n   22  THREE.Rectangle=function(){function a(){f=d-b;g=e-c}var b,c,d,e,f,g,h=!0;this.getX=function(){return b};this.getY=function(){return c};this.getWidth=function(){return f};this.getHeight=function(){return g};this.getLeft=function(){return b};this.getTop=function(){return c};this.getRight=function(){return d};this.getBottom=function(){return e};this.set=function(k,f,g,i){h=!1;b=k;c=f;d=g;e=i;a()};this.addPoint=function(f,g){h?(h=!1,b=f,c=g,d=f,e=g):(b=b<f?b:f,c=c<g?c:g,d=d>f?d:f,e=e>g?e:g);a()};this.add3Points=\n   ..\n   49  THREE.Matrix4.makeFrustum=function(a,b,c,d,e,f){var g;g=new THREE.Matrix4;g.n11=2*e/(b-a);g.n12=0;g.n13=(b+a)/(b-a);g.n14=0;g.n21=0;g.n22=2*e/(d-c);g.n23=(d+c)/(d-c);g.n24=0;g.n31=0;g.n32=0;g.n33=-(f+e)/(f-e);g.n34=-2*f*e/(f-e);g.n41=0;g.n42=0;g.n43=-1;g.n44=0;return g};THREE.Matrix4.makePerspective=function(a,b,c,d){var e,a=c*Math.tan(a*Math.PI/360);e=-a;return THREE.Matrix4.makeFrustum(e*b,a*b,e,a,c,d)};\n   50  THREE.Matrix4.makeOrtho=function(a,b,c,d,e,f){var g,h,k,m;g=new THREE.Matrix4;h=b-a;k=c-d;m=f-e;g.n11=2/h;g.n12=0;g.n13=0;g.n14=-((b+a)/h);g.n21=0;g.n22=2/k;g.n23=0;g.n24=-((c+d)/k);g.n31=0;g.n32=0;g.n33=-2/m;g.n34=-((f+e)/m);g.n41=0;g.n42=0;g.n43=0;g.n44=1;return g};THREE.Matrix4.__v1=new THREE.Vector3;THREE.Matrix4.__v2=new THREE.Vector3;THREE.Matrix4.__v3=new THREE.Vector3;THREE.Matrix4.__m1=new THREE.Matrix4;THREE.Matrix4.__m2=new THREE.Matrix4;\n   51: THREE.Object3D=function(){this.name=\"\";this.id=THREE.Object3DCount++;this.parent=void 0;this.children=[];this.up=new THREE.Vector3(0,1,0);this.position=new THREE.Vector3;this.rotation=new THREE.Vector3;this.eulerOrder=\"XYZ\";this.scale=new THREE.Vector3(1,1,1);this.flipSided=this.doubleSided=this.dynamic=!1;this.renderDepth=null;this.rotationAutoUpdate=!0;this.matrix=new THREE.Matrix4;this.matrixWorld=new THREE.Matrix4;this.matrixRotationWorld=new THREE.Matrix4;this.matrixWorldNeedsUpdate=this.matrixAutoUpdate=\n   52  !0;this.quaternion=new THREE.Quaternion;this.useQuaternion=!1;this.boundRadius=0;this.boundRadiusScale=1;this.visible=!0;this.receiveShadow=this.castShadow=!1;this.frustumCulled=!0;this._vector=new THREE.Vector3};\n   53  THREE.Object3D.prototype={constructor:THREE.Object3D,translate:function(a,b){this.matrix.rotateAxis(b);this.position.addSelf(b.multiplyScalar(a))},translateX:function(a){this.translate(a,this._vector.set(1,0,0))},translateY:function(a){this.translate(a,this._vector.set(0,1,0))},translateZ:function(a){this.translate(a,this._vector.set(0,0,1))},lookAt:function(a){this.matrix.lookAt(a,this.position,this.up);this.rotationAutoUpdate&&this.rotation.setRotationFromMatrix(this.matrix)},add:function(a){if(this.children.indexOf(a)===\n   ..\n   62  s.objects.sort(c);return s};this.projectScene=function(a,e,f){var g=e.near,z=e.far,A,L,y,F,q,B,x,C,v,N,Q,T,W,U,V,R;D=r=n=i=0;s.elements.length=0;e.parent===void 0&&(console.warn(\"DEPRECATED: Camera hasn't been added to a Scene. Adding it...\"),a.add(e));a.updateMatrixWorld();e.matrixWorldInverse.getInverse(e.matrixWorld);w.multiply(e.projectionMatrix,e.matrixWorldInverse);this.computeFrustum(w);s=this.projectGraph(a,!1);a=0;for(A=s.objects.length;a<A;a++)if(v=s.objects[a].object,N=v.matrixWorld,T=\n   63  v.material,k=0,v instanceof THREE.Mesh){Q=v.geometry;W=v.geometry.materials;F=Q.vertices;U=Q.faces;V=Q.faceVertexUvs;Q=v.matrixRotationWorld.extractRotation(N);L=0;for(y=F.length;L<y;L++)h=b(),h.positionWorld.copy(F[L].position),N.multiplyVector3(h.positionWorld),h.positionScreen.copy(h.positionWorld),w.multiplyVector4(h.positionScreen),h.positionScreen.x/=h.positionScreen.w,h.positionScreen.y/=h.positionScreen.w,h.visible=h.positionScreen.z>g&&h.positionScreen.z<z;F=0;for(L=U.length;F<L;F++){y=U[F];\n   64: if(y instanceof THREE.Face3)if(q=m[y.a],B=m[y.b],x=m[y.c],q.visible&&B.visible&&x.visible&&(v.doubleSided||v.flipSided!=(x.positionScreen.x-q.positionScreen.x)*(B.positionScreen.y-q.positionScreen.y)-(x.positionScreen.y-q.positionScreen.y)*(B.positionScreen.x-q.positionScreen.x)<0))C=l[i]=l[i]||new THREE.RenderableFace3,i++,j=C,j.v1.copy(q),j.v2.copy(B),j.v3.copy(x);else continue;else if(y instanceof THREE.Face4)if(q=m[y.a],B=m[y.b],x=m[y.c],C=m[y.d],q.visible&&B.visible&&x.visible&&C.visible&&(v.doubleSided||\n   65: v.flipSided!=((C.positionScreen.x-q.positionScreen.x)*(B.positionScreen.y-q.positionScreen.y)-(C.positionScreen.y-q.positionScreen.y)*(B.positionScreen.x-q.positionScreen.x)<0||(B.positionScreen.x-x.positionScreen.x)*(C.positionScreen.y-x.positionScreen.y)-(B.positionScreen.y-x.positionScreen.y)*(C.positionScreen.x-x.positionScreen.x)<0)))R=p[n]=p[n]||new THREE.RenderableFace4,n++,j=R,j.v1.copy(q),j.v2.copy(B),j.v3.copy(x),j.v4.copy(C);else continue;j.normalWorld.copy(y.normal);Q.multiplyVector3(j.normalWorld);\n   66  j.centroidWorld.copy(y.centroid);N.multiplyVector3(j.centroidWorld);j.centroidScreen.copy(j.centroidWorld);w.multiplyVector3(j.centroidScreen);x=y.vertexNormals;q=0;for(B=x.length;q<B;q++)C=j.vertexNormalsWorld[q],C.copy(x[q]),Q.multiplyVector3(C);q=0;for(B=V.length;q<B;q++)if(R=V[q][F]){x=0;for(C=R.length;x<C;x++)j.uvs[q][x]=R[x]}j.material=T;j.faceMaterial=y.materialIndex!==null?W[y.materialIndex]:null;j.z=j.centroidScreen.z;s.elements.push(j)}}else if(v instanceof THREE.Line){O.multiply(w,N);F=\n   67  v.geometry.vertices;q=b();q.positionScreen.copy(F[0].position);O.multiplyVector4(q.positionScreen);L=1;for(y=F.length;L<y;L++)if(q=b(),q.positionScreen.copy(F[L].position),O.multiplyVector4(q.positionScreen),B=m[k-2],G.copy(q.positionScreen),H.copy(B.positionScreen),d(G,H))G.multiplyScalar(1/G.w),H.multiplyScalar(1/H.w),v=I[r]=I[r]||new THREE.RenderableLine,r++,o=v,o.v1.positionScreen.copy(G),o.v2.positionScreen.copy(H),o.z=Math.max(G.z,H.z),o.material=T,s.elements.push(o)}a=0;for(A=s.sprites.length;a<\n\nW:\\_resources\\JavaScript\\three.js\\build\\custom\\ThreeExtras.js:\n   18  c.duration=a.duration,c.mirroredLoop=a.mirroredLoop,c.time=a.time,c.lastKeyframe=a.lastKeyframe,c.currentKeyframe=a.currentKeyframe,c.direction=a.direction,c.directionBackwards=a.directionBackwards):a instanceof THREE.SkinnedMesh?c=new THREE.SkinnedMesh(a.geometry,a.material):a instanceof THREE.Mesh?c=new THREE.Mesh(a.geometry,a.material):a instanceof THREE.Line?c=new THREE.Line(a.geometry,a.material,a.type):a instanceof THREE.Ribbon?c=new THREE.Ribbon(a.geometry,a.material):a instanceof THREE.ParticleSystem?\n   19  (c=new THREE.ParticleSystem(a.geometry,a.material),c.sortParticles=a.sortParticles):a instanceof THREE.Particle?c=new THREE.Particle(a.material):a instanceof THREE.Sprite?(c=new THREE.Sprite({}),c.color.copy(a.color),c.map=a.map,c.blending=a.blending,c.useScreenCoordinates=a.useScreenCoordinates,c.mergeWith3D=a.mergeWith3D,c.affectedByDistance=a.affectedByDistance,c.scaleByViewport=a.scaleByViewport,c.alignment=a.alignment,c.rotation3d.copy(a.rotation3d),c.rotation=a.rotation,c.opacity=a.opacity,\n   20: c.uvOffset.copy(a.uvOffset),c.uvScale.copy(a.uvScale)):a instanceof THREE.LOD?c=new THREE.LOD:a instanceof THREE.MarchingCubes?(c=new THREE.MarchingCubes(a.resolution,a.material),c.field.set(a.field),c.isolation=a.isolation):a instanceof THREE.Object3D&&(c=new THREE.Object3D);c.parent=a.parent;c.up.copy(a.up);c.position.copy(a.position);c.rotation instanceof THREE.Vector3&&c.rotation.copy(a.rotation);c.eulerOrder=a.eulerOrder;c.scale.copy(a.scale);c.dynamic=a.dynamic;c.doubleSided=a.doubleSided;c.flipSided=\n   21: a.flipSided;c.renderDepth=a.renderDepth;c.rotationAutoUpdate=a.rotationAutoUpdate;c.matrix.copy(a.matrix);c.matrixWorld.copy(a.matrixWorld);c.matrixRotationWorld.copy(a.matrixRotationWorld);c.matrixAutoUpdate=a.matrixAutoUpdate;c.matrixWorldNeedsUpdate=a.matrixWorldNeedsUpdate;c.quaternion.copy(a.quaternion);c.useQuaternion=a.useQuaternion;c.boundRadius=a.boundRadius;c.boundRadiusScale=a.boundRadiusScale;c.visible=a.visible;c.castShadow=a.castShadow;c.receiveShadow=a.receiveShadow;c.frustumCulled=\n   22  a.frustumCulled;for(var b=0;b<a.children.length;b++){var d=THREE.SceneUtils.cloneObject(a.children[b]);c.children[b]=d;d.parent=c}if(a instanceof THREE.LOD)for(b=0;b<a.LODs.length;b++)c.LODs[b]={visibleAtDistance:a.LODs[b].visibleAtDistance,object3D:c.children[b]};return c}};\n   23  if(THREE.WebGLRenderer)THREE.ShaderUtils={lib:{fresnel:{uniforms:{mRefractionRatio:{type:\"f\",value:1.02},mFresnelBias:{type:\"f\",value:0.1},mFresnelPower:{type:\"f\",value:2},mFresnelScale:{type:\"f\",value:1},tCube:{type:\"t\",value:1,texture:null}},fragmentShader:\"uniform samplerCube tCube;\\nvarying vec3 vReflect;\\nvarying vec3 vRefract[3];\\nvarying float vReflectionFactor;\\nvoid main() {\\nvec4 reflectedColor = textureCube( tCube, vec3( -vReflect.x, vReflect.yz ) );\\nvec4 refractedColor = vec4( 1.0, 1.0, 1.0, 1.0 );\\nrefractedColor.r = textureCube( tCube, vec3( -vRefract[0].x, vRefract[0].yz ) ).r;\\nrefractedColor.g = textureCube( tCube, vec3( -vRefract[1].x, vRefract[1].yz ) ).g;\\nrefractedColor.b = textureCube( tCube, vec3( -vRefract[2].x, vRefract[2].yz ) ).b;\\nrefractedColor.a = 1.0;\\ngl_FragColor = mix( refractedColor, reflectedColor, clamp( vReflectionFactor, 0.0, 1.0 ) );\\n}\",\n\nW:\\_resources\\JavaScript\\three.js\\build\\custom\\ThreeSVG.js:\n   18  c,d=[];b=0;for(c=a.length;b<c;b++)Array.prototype.push.apply(d,this.intersectObject(a[b]));d.sort(function(a,b){return a.distance-b.distance});return d};var f=new THREE.Vector3,e=new THREE.Vector3,g=new THREE.Vector3,h=new THREE.Vector3,a=new THREE.Vector3,b=new THREE.Vector3,l=new THREE.Vector3,m=new THREE.Vector3,i=new THREE.Vector3;this.intersectObject=function(j){for(var k,n=[],o=0,K=j.children.length;o<K;o++)Array.prototype.push.apply(n,this.intersectObject(j.children[o]));if(j instanceof THREE.Particle){o=\n   19  c(this.origin,this.direction,j.matrixWorld.getPosition());if(o===null||o>j.scale.x)return[];k={distance:o,point:j.position,face:null,object:j};n.push(k)}else if(j instanceof THREE.Mesh){o=c(this.origin,this.direction,j.matrixWorld.getPosition());if(o===null||o>j.geometry.boundingSphere.radius*Math.max(j.scale.x,Math.max(j.scale.y,j.scale.z)))return n;var J,p=j.geometry,N=p.vertices,s;j.matrixRotationWorld.extractRotation(j.matrixWorld);o=0;for(K=p.faces.length;o<K;o++)if(k=p.faces[o],a.copy(this.origin),\n   20: b.copy(this.direction),s=j.matrixWorld,l=s.multiplyVector3(l.copy(k.centroid)).subSelf(a),J=l.dot(b),!(J<=0)&&(f=s.multiplyVector3(f.copy(N[k.a].position)),e=s.multiplyVector3(e.copy(N[k.b].position)),g=s.multiplyVector3(g.copy(N[k.c].position)),k instanceof THREE.Face4&&(h=s.multiplyVector3(h.copy(N[k.d].position))),m=j.matrixRotationWorld.multiplyVector3(m.copy(k.normal)),J=b.dot(m),j.doubleSided||(j.flipSided?J>0:J<0)))if(J=m.dot(l.sub(f,a))/J,i.add(a,b.multiplyScalar(J)),k instanceof THREE.Face3)d(i,\n   21  f,e,g)&&(k={distance:a.distanceTo(i),point:i.clone(),face:k,object:j},n.push(k));else if(k instanceof THREE.Face4&&(d(i,f,e,h)||d(i,e,g,h)))k={distance:a.distanceTo(i),point:i.clone(),face:k,object:j},n.push(k)}return n};var j=new THREE.Vector3,n=new THREE.Vector3,k=new THREE.Vector3,o,p,u,I,v,E,s,t,C,y,z};\n   22  THREE.Rectangle=function(){function a(){e=d-b;g=f-c}var b,c,d,f,e,g,h=!0;this.getX=function(){return b};this.getY=function(){return c};this.getWidth=function(){return e};this.getHeight=function(){return g};this.getLeft=function(){return b};this.getTop=function(){return c};this.getRight=function(){return d};this.getBottom=function(){return f};this.set=function(e,g,i,j){h=!1;b=e;c=g;d=i;f=j;a()};this.addPoint=function(e,g){h?(h=!1,b=e,c=g,d=e,f=g):(b=b<e?b:e,c=c<g?c:g,d=d>e?d:e,f=f>g?f:g);a()};this.add3Points=\n   ..\n   49  THREE.Matrix4.makeFrustum=function(a,b,c,d,f,e){var g;g=new THREE.Matrix4;g.n11=2*f/(b-a);g.n12=0;g.n13=(b+a)/(b-a);g.n14=0;g.n21=0;g.n22=2*f/(d-c);g.n23=(d+c)/(d-c);g.n24=0;g.n31=0;g.n32=0;g.n33=-(e+f)/(e-f);g.n34=-2*e*f/(e-f);g.n41=0;g.n42=0;g.n43=-1;g.n44=0;return g};THREE.Matrix4.makePerspective=function(a,b,c,d){var f,a=c*Math.tan(a*Math.PI/360);f=-a;return THREE.Matrix4.makeFrustum(f*b,a*b,f,a,c,d)};\n   50  THREE.Matrix4.makeOrtho=function(a,b,c,d,f,e){var g,h,l,m;g=new THREE.Matrix4;h=b-a;l=c-d;m=e-f;g.n11=2/h;g.n12=0;g.n13=0;g.n14=-((b+a)/h);g.n21=0;g.n22=2/l;g.n23=0;g.n24=-((c+d)/l);g.n31=0;g.n32=0;g.n33=-2/m;g.n34=-((e+f)/m);g.n41=0;g.n42=0;g.n43=0;g.n44=1;return g};THREE.Matrix4.__v1=new THREE.Vector3;THREE.Matrix4.__v2=new THREE.Vector3;THREE.Matrix4.__v3=new THREE.Vector3;THREE.Matrix4.__m1=new THREE.Matrix4;THREE.Matrix4.__m2=new THREE.Matrix4;\n   51: THREE.Object3D=function(){this.name=\"\";this.id=THREE.Object3DCount++;this.parent=void 0;this.children=[];this.up=new THREE.Vector3(0,1,0);this.position=new THREE.Vector3;this.rotation=new THREE.Vector3;this.eulerOrder=\"XYZ\";this.scale=new THREE.Vector3(1,1,1);this.flipSided=this.doubleSided=this.dynamic=!1;this.renderDepth=null;this.rotationAutoUpdate=!0;this.matrix=new THREE.Matrix4;this.matrixWorld=new THREE.Matrix4;this.matrixRotationWorld=new THREE.Matrix4;this.matrixWorldNeedsUpdate=this.matrixAutoUpdate=\n   52  !0;this.quaternion=new THREE.Quaternion;this.useQuaternion=!1;this.boundRadius=0;this.boundRadiusScale=1;this.visible=!0;this.receiveShadow=this.castShadow=!1;this.frustumCulled=!0;this._vector=new THREE.Vector3};\n   53  THREE.Object3D.prototype={constructor:THREE.Object3D,translate:function(a,b){this.matrix.rotateAxis(b);this.position.addSelf(b.multiplyScalar(a))},translateX:function(a){this.translate(a,this._vector.set(1,0,0))},translateY:function(a){this.translate(a,this._vector.set(0,1,0))},translateZ:function(a){this.translate(a,this._vector.set(0,0,1))},lookAt:function(a){this.matrix.lookAt(a,this.position,this.up);this.rotationAutoUpdate&&this.rotation.setRotationFromMatrix(this.matrix)},add:function(a){if(this.children.indexOf(a)===\n   ..\n   62  t.objects.sort(c);return t};this.projectScene=function(a,e,f){var g=e.near,x=e.far,C,O,r,q,w,B,D,L,F,P,Q,T,W,U,V,R;E=u=k=j=0;t.elements.length=0;e.parent===void 0&&(console.warn(\"DEPRECATED: Camera hasn't been added to a Scene. Adding it...\"),a.add(e));a.updateMatrixWorld();e.matrixWorldInverse.getInverse(e.matrixWorld);z.multiply(e.projectionMatrix,e.matrixWorldInverse);this.computeFrustum(z);t=this.projectGraph(a,!1);a=0;for(C=t.objects.length;a<C;a++)if(F=t.objects[a].object,P=F.matrixWorld,T=\n   63  F.material,l=0,F instanceof THREE.Mesh){Q=F.geometry;W=F.geometry.materials;q=Q.vertices;U=Q.faces;V=Q.faceVertexUvs;Q=F.matrixRotationWorld.extractRotation(P);O=0;for(r=q.length;O<r;O++)h=b(),h.positionWorld.copy(q[O].position),P.multiplyVector3(h.positionWorld),h.positionScreen.copy(h.positionWorld),z.multiplyVector4(h.positionScreen),h.positionScreen.x/=h.positionScreen.w,h.positionScreen.y/=h.positionScreen.w,h.visible=h.positionScreen.z>g&&h.positionScreen.z<x;q=0;for(O=U.length;q<O;q++){r=U[q];\n   64: if(r instanceof THREE.Face3)if(w=m[r.a],B=m[r.b],D=m[r.c],w.visible&&B.visible&&D.visible&&(F.doubleSided||F.flipSided!=(D.positionScreen.x-w.positionScreen.x)*(B.positionScreen.y-w.positionScreen.y)-(D.positionScreen.y-w.positionScreen.y)*(B.positionScreen.x-w.positionScreen.x)<0))L=n[j]=n[j]||new THREE.RenderableFace3,j++,i=L,i.v1.copy(w),i.v2.copy(B),i.v3.copy(D);else continue;else if(r instanceof THREE.Face4)if(w=m[r.a],B=m[r.b],D=m[r.c],L=m[r.d],w.visible&&B.visible&&D.visible&&L.visible&&(F.doubleSided||\n   65: F.flipSided!=((L.positionScreen.x-w.positionScreen.x)*(B.positionScreen.y-w.positionScreen.y)-(L.positionScreen.y-w.positionScreen.y)*(B.positionScreen.x-w.positionScreen.x)<0||(B.positionScreen.x-D.positionScreen.x)*(L.positionScreen.y-D.positionScreen.y)-(B.positionScreen.y-D.positionScreen.y)*(L.positionScreen.x-D.positionScreen.x)<0)))R=o[k]=o[k]||new THREE.RenderableFace4,k++,i=R,i.v1.copy(w),i.v2.copy(B),i.v3.copy(D),i.v4.copy(L);else continue;i.normalWorld.copy(r.normal);Q.multiplyVector3(i.normalWorld);\n   66  i.centroidWorld.copy(r.centroid);P.multiplyVector3(i.centroidWorld);i.centroidScreen.copy(i.centroidWorld);z.multiplyVector3(i.centroidScreen);D=r.vertexNormals;w=0;for(B=D.length;w<B;w++)L=i.vertexNormalsWorld[w],L.copy(D[w]),Q.multiplyVector3(L);w=0;for(B=V.length;w<B;w++)if(R=V[w][q]){D=0;for(L=R.length;D<L;D++)i.uvs[w][D]=R[D]}i.material=T;i.faceMaterial=r.materialIndex!==null?W[r.materialIndex]:null;i.z=i.centroidScreen.z;t.elements.push(i)}}else if(F instanceof THREE.Line){G.multiply(z,P);q=\n   67  F.geometry.vertices;w=b();w.positionScreen.copy(q[0].position);G.multiplyVector4(w.positionScreen);O=1;for(r=q.length;O<r;O++)if(w=b(),w.positionScreen.copy(q[O].position),G.multiplyVector4(w.positionScreen),B=m[l-2],H.copy(w.positionScreen),A.copy(B.positionScreen),d(H,A))H.multiplyScalar(1/H.w),A.multiplyScalar(1/A.w),F=I[u]=I[u]||new THREE.RenderableLine,u++,p=F,p.v1.positionScreen.copy(H),p.v2.positionScreen.copy(A),p.z=Math.max(H.z,A.z),p.material=T,t.elements.push(p)}a=0;for(C=t.sprites.length;a<\n\nW:\\_resources\\JavaScript\\three.js\\build\\custom\\ThreeWebGL.js:\n   18  function(a){var b,c,e=[];b=0;for(c=a.length;b<c;b++)Array.prototype.push.apply(e,this.intersectObject(a[b]));e.sort(function(a,b){return a.distance-b.distance});return e};var f=new THREE.Vector3,g=new THREE.Vector3,h=new THREE.Vector3,i=new THREE.Vector3,a=new THREE.Vector3,b=new THREE.Vector3,n=new THREE.Vector3,k=new THREE.Vector3,l=new THREE.Vector3;this.intersectObject=function(r){for(var p,y=[],A=0,oa=r.children.length;A<oa;A++)Array.prototype.push.apply(y,this.intersectObject(r.children[A]));\n   19  if(r instanceof THREE.Particle){A=c(this.origin,this.direction,r.matrixWorld.getPosition());if(A===null||A>r.scale.x)return[];p={distance:A,point:r.position,face:null,object:r};y.push(p)}else if(r instanceof THREE.Mesh){A=c(this.origin,this.direction,r.matrixWorld.getPosition());if(A===null||A>r.geometry.boundingSphere.radius*Math.max(r.scale.x,Math.max(r.scale.y,r.scale.z)))return y;var I,R=r.geometry,Q=R.vertices,L;r.matrixRotationWorld.extractRotation(r.matrixWorld);A=0;for(oa=R.faces.length;A<\n   20: oa;A++)if(p=R.faces[A],a.copy(this.origin),b.copy(this.direction),L=r.matrixWorld,n=L.multiplyVector3(n.copy(p.centroid)).subSelf(a),I=n.dot(b),!(I<=0)&&(f=L.multiplyVector3(f.copy(Q[p.a].position)),g=L.multiplyVector3(g.copy(Q[p.b].position)),h=L.multiplyVector3(h.copy(Q[p.c].position)),p instanceof THREE.Face4&&(i=L.multiplyVector3(i.copy(Q[p.d].position))),k=r.matrixRotationWorld.multiplyVector3(k.copy(p.normal)),I=b.dot(k),r.doubleSided||(r.flipSided?I>0:I<0)))if(I=k.dot(n.sub(f,a))/I,l.add(a,\n   21  b.multiplyScalar(I)),p instanceof THREE.Face3)e(l,f,g,h)&&(p={distance:a.distanceTo(l),point:l.clone(),face:p,object:r},y.push(p));else if(p instanceof THREE.Face4&&(e(l,f,g,i)||e(l,g,h,i)))p={distance:a.distanceTo(l),point:l.clone(),face:p,object:r},y.push(p)}return y};var p=new THREE.Vector3,A=new THREE.Vector3,r=new THREE.Vector3,y,I,R,va,ha,ja,ga,L,S,F,N};\n   22  THREE.Rectangle=function(){function a(){g=e-b;h=f-c}var b,c,e,f,g,h,i=!0;this.getX=function(){return b};this.getY=function(){return c};this.getWidth=function(){return g};this.getHeight=function(){return h};this.getLeft=function(){return b};this.getTop=function(){return c};this.getRight=function(){return e};this.getBottom=function(){return f};this.set=function(g,h,l,p){i=!1;b=g;c=h;e=l;f=p;a()};this.addPoint=function(g,h){i?(i=!1,b=g,c=h,e=g,f=h):(b=b<g?b:g,c=c<h?c:h,e=e>g?e:g,f=f>h?f:h);a()};this.add3Points=\n   ..\n   49  THREE.Matrix4.makeFrustum=function(a,b,c,e,f,g){var h;h=new THREE.Matrix4;h.n11=2*f/(b-a);h.n12=0;h.n13=(b+a)/(b-a);h.n14=0;h.n21=0;h.n22=2*f/(e-c);h.n23=(e+c)/(e-c);h.n24=0;h.n31=0;h.n32=0;h.n33=-(g+f)/(g-f);h.n34=-2*g*f/(g-f);h.n41=0;h.n42=0;h.n43=-1;h.n44=0;return h};THREE.Matrix4.makePerspective=function(a,b,c,e){var f,a=c*Math.tan(a*Math.PI/360);f=-a;return THREE.Matrix4.makeFrustum(f*b,a*b,f,a,c,e)};\n   50  THREE.Matrix4.makeOrtho=function(a,b,c,e,f,g){var h,i,n,k;h=new THREE.Matrix4;i=b-a;n=c-e;k=g-f;h.n11=2/i;h.n12=0;h.n13=0;h.n14=-((b+a)/i);h.n21=0;h.n22=2/n;h.n23=0;h.n24=-((c+e)/n);h.n31=0;h.n32=0;h.n33=-2/k;h.n34=-((g+f)/k);h.n41=0;h.n42=0;h.n43=0;h.n44=1;return h};THREE.Matrix4.__v1=new THREE.Vector3;THREE.Matrix4.__v2=new THREE.Vector3;THREE.Matrix4.__v3=new THREE.Vector3;THREE.Matrix4.__m1=new THREE.Matrix4;THREE.Matrix4.__m2=new THREE.Matrix4;\n   51: THREE.Object3D=function(){this.name=\"\";this.id=THREE.Object3DCount++;this.parent=void 0;this.children=[];this.up=new THREE.Vector3(0,1,0);this.position=new THREE.Vector3;this.rotation=new THREE.Vector3;this.eulerOrder=\"XYZ\";this.scale=new THREE.Vector3(1,1,1);this.flipSided=this.doubleSided=this.dynamic=!1;this.renderDepth=null;this.rotationAutoUpdate=!0;this.matrix=new THREE.Matrix4;this.matrixWorld=new THREE.Matrix4;this.matrixRotationWorld=new THREE.Matrix4;this.matrixWorldNeedsUpdate=this.matrixAutoUpdate=\n   52  !0;this.quaternion=new THREE.Quaternion;this.useQuaternion=!1;this.boundRadius=0;this.boundRadiusScale=1;this.visible=!0;this.receiveShadow=this.castShadow=!1;this.frustumCulled=!0;this._vector=new THREE.Vector3};\n   53  THREE.Object3D.prototype={constructor:THREE.Object3D,translate:function(a,b){this.matrix.rotateAxis(b);this.position.addSelf(b.multiplyScalar(a))},translateX:function(a){this.translate(a,this._vector.set(1,0,0))},translateY:function(a){this.translate(a,this._vector.set(0,1,0))},translateZ:function(a){this.translate(a,this._vector.set(0,0,1))},lookAt:function(a){this.matrix.lookAt(a,this.position,this.up);this.rotationAutoUpdate&&this.rotation.setRotationFromMatrix(this.matrix)},add:function(a){if(this.children.indexOf(a)===\n   ..\n   62  L.objects.sort(c);return L};this.projectScene=function(a,g,f){var h=g.near,S=g.far,M,pa,ma,na,J,O,Y,G,d,ta,xa,Ca,Aa,ya,Fa,za;ja=R=r=p=0;L.elements.length=0;g.parent===void 0&&(console.warn(\"DEPRECATED: Camera hasn't been added to a Scene. Adding it...\"),a.add(g));a.updateMatrixWorld();g.matrixWorldInverse.getInverse(g.matrixWorld);N.multiply(g.projectionMatrix,g.matrixWorldInverse);this.computeFrustum(N);L=this.projectGraph(a,!1);a=0;for(M=L.objects.length;a<M;a++)if(d=L.objects[a].object,ta=d.matrixWorld,\n   63  Ca=d.material,n=0,d instanceof THREE.Mesh){xa=d.geometry;Aa=d.geometry.materials;na=xa.vertices;ya=xa.faces;Fa=xa.faceVertexUvs;xa=d.matrixRotationWorld.extractRotation(ta);pa=0;for(ma=na.length;pa<ma;pa++)i=b(),i.positionWorld.copy(na[pa].position),ta.multiplyVector3(i.positionWorld),i.positionScreen.copy(i.positionWorld),N.multiplyVector4(i.positionScreen),i.positionScreen.x/=i.positionScreen.w,i.positionScreen.y/=i.positionScreen.w,i.visible=i.positionScreen.z>h&&i.positionScreen.z<S;na=0;for(pa=\n   64: ya.length;na<pa;na++){ma=ya[na];if(ma instanceof THREE.Face3)if(J=k[ma.a],O=k[ma.b],Y=k[ma.c],J.visible&&O.visible&&Y.visible&&(d.doubleSided||d.flipSided!=(Y.positionScreen.x-J.positionScreen.x)*(O.positionScreen.y-J.positionScreen.y)-(Y.positionScreen.y-J.positionScreen.y)*(O.positionScreen.x-J.positionScreen.x)<0))G=A[p]=A[p]||new THREE.RenderableFace3,p++,l=G,l.v1.copy(J),l.v2.copy(O),l.v3.copy(Y);else continue;else if(ma instanceof THREE.Face4)if(J=k[ma.a],O=k[ma.b],Y=k[ma.c],G=k[ma.d],J.visible&&\n   65: O.visible&&Y.visible&&G.visible&&(d.doubleSided||d.flipSided!=((G.positionScreen.x-J.positionScreen.x)*(O.positionScreen.y-J.positionScreen.y)-(G.positionScreen.y-J.positionScreen.y)*(O.positionScreen.x-J.positionScreen.x)<0||(O.positionScreen.x-Y.positionScreen.x)*(G.positionScreen.y-Y.positionScreen.y)-(O.positionScreen.y-Y.positionScreen.y)*(G.positionScreen.x-Y.positionScreen.x)<0)))za=y[r]=y[r]||new THREE.RenderableFace4,r++,l=za,l.v1.copy(J),l.v2.copy(O),l.v3.copy(Y),l.v4.copy(G);else continue;\n   66  l.normalWorld.copy(ma.normal);xa.multiplyVector3(l.normalWorld);l.centroidWorld.copy(ma.centroid);ta.multiplyVector3(l.centroidWorld);l.centroidScreen.copy(l.centroidWorld);N.multiplyVector3(l.centroidScreen);Y=ma.vertexNormals;J=0;for(O=Y.length;J<O;J++)G=l.vertexNormalsWorld[J],G.copy(Y[J]),xa.multiplyVector3(G);J=0;for(O=Fa.length;J<O;J++)if(za=Fa[J][na]){Y=0;for(G=za.length;Y<G;Y++)l.uvs[J][Y]=za[Y]}l.material=Ca;l.faceMaterial=ma.materialIndex!==null?Aa[ma.materialIndex]:null;l.z=l.centroidScreen.z;\n   67  L.elements.push(l)}}else if(d instanceof THREE.Line){ca.multiply(N,ta);na=d.geometry.vertices;J=b();J.positionScreen.copy(na[0].position);ca.multiplyVector4(J.positionScreen);pa=1;for(ma=na.length;pa<ma;pa++)if(J=b(),J.positionScreen.copy(na[pa].position),ca.multiplyVector4(J.positionScreen),O=k[n-2],W.copy(J.positionScreen),la.copy(O.positionScreen),e(W,la))W.multiplyScalar(1/W.w),la.multiplyScalar(1/la.w),d=va[R]=va[R]||new THREE.RenderableLine,R++,I=d,I.v1.positionScreen.copy(W),I.v2.positionScreen.copy(la),\n   ..\n  212  w.__webglTexture)):la(j,m)}else if(q===\"tv\"){if(!w._array){w._array=[];q=0;for(p=w.texture.length;q<p;q++)w._array[q]=m+q}d.uniform1iv(j,w._array);q=0;for(p=w.texture.length;q<p;q++)(j=w.texture[q])&&la(j,w._array[q])}(e instanceof THREE.ShaderMaterial||e instanceof THREE.MeshPhongMaterial||e.envMap)&&h.cameraPosition!==null&&d.uniform3f(h.cameraPosition,a.position.x,a.position.y,a.position.z);(e instanceof THREE.MeshPhongMaterial||e instanceof THREE.MeshLambertMaterial||e instanceof THREE.ShaderMaterial||\n  213  e.skinning)&&h.viewMatrix!==null&&d.uniformMatrix4fv(h.viewMatrix,!1,Ka);e.skinning&&(d.uniformMatrix4fv(h.cameraInverseMatrix,!1,Ka),d.uniformMatrix4fv(h.boneGlobalMatrices,!1,f.boneMatrices))}d.uniformMatrix4fv(h.modelViewMatrix,!1,f._modelViewMatrixArray);h.normalMatrix&&d.uniformMatrix3fv(h.normalMatrix,!1,f._normalMatrixArray);(e instanceof THREE.ShaderMaterial||e.envMap||e.skinning||f.receiveShadow)&&h.objectMatrix!==null&&d.uniformMatrix4fv(h.objectMatrix,!1,f._objectMatrixArray);return g}\n  214: function ga(a,b,c){a._modelViewMatrix.multiplyToArray(b.matrixWorldInverse,a.matrixWorld,a._modelViewMatrixArray);c&&THREE.Matrix4.makeInvert3x3(a._modelViewMatrix).transposeIntoArray(a._normalMatrixArray)}function L(a){if(za!==a.doubleSided)a.doubleSided?d.disable(d.CULL_FACE):d.enable(d.CULL_FACE),za=a.doubleSided;if(Ta!==a.flipSided)a.flipSided?d.frontFace(d.CW):d.frontFace(d.CCW),Ta=a.flipSided}function S(a){Na!==a&&(a?d.enable(d.DEPTH_TEST):d.disable(d.DEPTH_TEST),Na=a)}function F(a){Oa!==a&&\n  215  (d.depthMask(a),Oa=a)}function N(a,b,c){Ua!==a&&(a?d.enable(d.POLYGON_OFFSET_FILL):d.disable(d.POLYGON_OFFSET_FILL),Ua=a);if(a&&(Va!==b||Wa!==c))d.polygonOffset(b,c),Va=b,Wa=c}function ca(a){if(a!==Pa){switch(a){case THREE.AdditiveBlending:d.blendEquation(d.FUNC_ADD);d.blendFunc(d.SRC_ALPHA,d.ONE);break;case THREE.SubtractiveBlending:d.blendEquation(d.FUNC_ADD);d.blendFunc(d.ZERO,d.ONE_MINUS_SRC_COLOR);break;case THREE.MultiplyBlending:d.blendEquation(d.FUNC_ADD);d.blendFunc(d.ZERO,d.SRC_COLOR);break;\n  216  default:d.blendEquationSeparate(d.FUNC_ADD,d.FUNC_ADD),d.blendFuncSeparate(d.SRC_ALPHA,d.ONE_MINUS_SRC_ALPHA,d.ONE,d.ONE_MINUS_SRC_ALPHA)}Pa=a}}function M(a,b){var c;a===\"fragment\"?c=d.createShader(d.FRAGMENT_SHADER):a===\"vertex\"&&(c=d.createShader(d.VERTEX_SHADER));d.shaderSource(c,b);d.compileShader(c);if(!d.getShaderParameter(c,d.COMPILE_STATUS))return console.error(d.getShaderInfoLog(c)),console.error(b),null;return c}function W(a,b,c){return(c.width&c.width-1)===0&&(c.height&c.height-1)===0?\n\nW:\\_resources\\JavaScript\\three.js\\examples\\webgl_materials_cars.html:\n  202  \n  203  				mesh = new THREE.Mesh( new THREE.CubeGeometry( 100, 100, 100 ), material );\n  204: 				mesh.flipSided = true;\n  205  				sceneCube.add( mesh );\n  206  \n\nW:\\_resources\\JavaScript\\three.js\\examples\\webgl_materials_cars_anaglyph.html:\n  198  \n  199  				mesh = new THREE.Mesh( new THREE.CubeGeometry( 100000, 100000, 100000 ), material );\n  200: 				mesh.flipSided = true;\n  201  				scene.add( mesh );\n  202  \n\nW:\\_resources\\JavaScript\\three.js\\examples\\webgl_materials_cars_parallaxbarrier.html:\n  200  \n  201  				mesh = new THREE.Mesh( new THREE.CubeGeometry( 100000, 100000, 100000 ), material );\n  202: 				mesh.flipSided = true;\n  203  				scene.add( mesh );\n  204  \n\nW:\\_resources\\JavaScript\\three.js\\examples\\webgl_materials_cubemap.html:\n  130  \n  131  				mesh = new THREE.Mesh( new THREE.CubeGeometry( 100, 100, 100 ), material );\n  132: 				mesh.flipSided = true;\n  133  				sceneCube.add( mesh );\n  134  \n\nW:\\_resources\\JavaScript\\three.js\\examples\\webgl_materials_cubemap_balls_reflection.html:\n  125  \n  126  				mesh = new THREE.Mesh( new THREE.CubeGeometry( 100, 100, 100 ), material );\n  127: 				mesh.flipSided = true;\n  128  				sceneCube.add( mesh );\n  129  \n\nW:\\_resources\\JavaScript\\three.js\\examples\\webgl_materials_cubemap_balls_reflection_anaglyph.html:\n  120  \n  121  				mesh = new THREE.Mesh( new THREE.CubeGeometry( 100000, 100000, 100000 ), material );\n  122: 				mesh.flipSided = true;\n  123  				scene.add( mesh );\n  124  \n\nW:\\_resources\\JavaScript\\three.js\\examples\\webgl_materials_cubemap_balls_refraction.html:\n  124  \n  125  				mesh = new THREE.Mesh( new THREE.CubeGeometry( 100, 100, 100 ), material );\n  126: 				mesh.flipSided = true;\n  127  				sceneCube.add( mesh );\n  128  \n\nW:\\_resources\\JavaScript\\three.js\\examples\\webgl_materials_cubemap_balls_refraction_crosseyed.html:\n  119  \n  120  				mesh = new THREE.Mesh( new THREE.CubeGeometry( 100000, 100000, 100000 ), material );\n  121: 				mesh.flipSided = true;\n  122  				scene.add( mesh );\n  123  \n\nW:\\_resources\\JavaScript\\three.js\\examples\\webgl_materials_cubemap_escher.html:\n  101  \n  102  				mesh = new THREE.Mesh( new THREE.CubeGeometry( 6000, 6000, 6000 ), material );\n  103: 				mesh.flipSided = true;\n  104  				scene.add( mesh );\n  105  \n\nW:\\_resources\\JavaScript\\three.js\\examples\\webgl_materials_cubemap_refraction.html:\n  125  \n  126  				mesh = new THREE.Mesh( new THREE.CubeGeometry( 100000, 100000, 100000 ), material );\n  127: 				mesh.flipSided = true;\n  128  				sceneCube.add( mesh );\n  129  \n\nW:\\_resources\\JavaScript\\three.js\\examples\\webgl_materials_shaders_fresnel.html:\n  132  \n  133  				mesh = new THREE.Mesh( new THREE.CubeGeometry( 100000, 100000, 100000 ), material );\n  134: 				mesh.flipSided = true;\n  135  				sceneCube.add( mesh );\n  136  \n\nW:\\_resources\\JavaScript\\three.js\\src\\core\\Object3D.js:\n   24  \n   25  	this.doubleSided = false;\n   26: 	this.flipSided = false;\n   27  \n   28  	this.renderDepth = null;\n\nW:\\_resources\\JavaScript\\three.js\\src\\core\\Projector.js:\n  234  \n  235  						if ( v1.visible && v2.visible && v3.visible &&\n  236: 							( object.doubleSided || ( object.flipSided !=\n  237  							( v3.positionScreen.x - v1.positionScreen.x ) * ( v2.positionScreen.y - v1.positionScreen.y ) -\n  238  							( v3.positionScreen.y - v1.positionScreen.y ) * ( v2.positionScreen.x - v1.positionScreen.x ) < 0 ) ) ) {\n  ...\n  258  \n  259  						if ( v1.visible && v2.visible && v3.visible && v4.visible &&\n  260: 							( object.doubleSided || ( object.flipSided !=\n  261  							( ( v4.positionScreen.x - v1.positionScreen.x ) * ( v2.positionScreen.y - v1.positionScreen.y ) -\n  262  							( v4.positionScreen.y - v1.positionScreen.y ) * ( v2.positionScreen.x - v1.positionScreen.x ) < 0 ||\n\nW:\\_resources\\JavaScript\\three.js\\src\\core\\Ray.js:\n  120  				dot = direction.dot( normal );\n  121  \n  122: 				if ( object.doubleSided || ( object.flipSided ? dot > 0 : dot < 0 ) ) { // Math.abs( dot ) > 0.0001\n  123  \n  124  					scalar = normal.dot( vector.sub( a, origin ) ) / dot;\n\nW:\\_resources\\JavaScript\\three.js\\src\\extras\\SceneUtils.js:\n  146  \n  147  		object.doubleSided = source.doubleSided;\n  148: 		object.flipSided = source.flipSided;\n  149  \n  150  		object.renderDepth = source.renderDepth;\n\nW:\\_resources\\JavaScript\\three.js\\src\\renderers\\WebGLRenderer.js:\n 5033  		}\n 5034  \n 5035: 		if ( _oldFlipSided !== object.flipSided ) {\n 5036  \n 5037: 			if( object.flipSided ) {\n 5038  \n 5039  				_gl.frontFace( _gl.CW );\n ....\n 5045  			}\n 5046  \n 5047: 			_oldFlipSided = object.flipSided;\n 5048  \n 5049  		}\n\n52 matches across 23 files\n\n\nSearching 118 files for \"flipSided\" (case sensitive)\n\nW:\\_resources\\JavaScript\\three.js\\src\\core\\Object3D.js:\n   24  \n   25  	this.doubleSided = false;\n   26: 	this.flipSided = false;\n   27  \n   28  	this.renderDepth = null;\n\nW:\\_resources\\JavaScript\\three.js\\src\\core\\Projector.js:\n  234  \n  235  						if ( v1.visible && v2.visible && v3.visible &&\n  236: 							( object.doubleSided || ( object.flipSided !=\n  237  							( v3.positionScreen.x - v1.positionScreen.x ) * ( v2.positionScreen.y - v1.positionScreen.y ) -\n  238  							( v3.positionScreen.y - v1.positionScreen.y ) * ( v2.positionScreen.x - v1.positionScreen.x ) < 0 ) ) ) {\n  ...\n  258  \n  259  						if ( v1.visible && v2.visible && v3.visible && v4.visible &&\n  260: 							( object.doubleSided || ( object.flipSided !=\n  261  							( ( v4.positionScreen.x - v1.positionScreen.x ) * ( v2.positionScreen.y - v1.positionScreen.y ) -\n  262  							( v4.positionScreen.y - v1.positionScreen.y ) * ( v2.positionScreen.x - v1.positionScreen.x ) < 0 ||\n\nW:\\_resources\\JavaScript\\three.js\\src\\core\\Ray.js:\n  120  				dot = direction.dot( normal );\n  121  \n  122: 				if ( object.doubleSided || ( object.flipSided ? dot > 0 : dot < 0 ) ) { // Math.abs( dot ) > 0.0001\n  123  \n  124  					scalar = normal.dot( vector.sub( a, origin ) ) / dot;\n\nW:\\_resources\\JavaScript\\three.js\\src\\extras\\SceneUtils.js:\n  146  \n  147  		object.doubleSided = source.doubleSided;\n  148: 		object.flipSided = source.flipSided;\n  149  \n  150  		object.renderDepth = source.renderDepth;\n\nW:\\_resources\\JavaScript\\three.js\\src\\renderers\\WebGLRenderer.js:\n 5033  		}\n 5034  \n 5035: 		if ( _oldFlipSided !== object.flipSided ) {\n 5036  \n 5037: 			if( object.flipSided ) {\n 5038  \n 5039  				_gl.frontFace( _gl.CW );\n ....\n 5045  			}\n 5046  \n 5047: 			_oldFlipSided = object.flipSided;\n 5048  \n 5049  		}\n\n9 matches across 5 files\n",
+			"settings":
+			{
+				"buffer_size": 59441,
+				"line_ending": "Unix",
+				"name": "Find Results",
+				"scratch": true
+			}
+		},
+		{
+			"file": "/W/_resources/JavaScript/three.js/src/renderers/WebGLRenderer.js",
+			"settings":
+			{
+				"buffer_size": 145630,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"contents": "struct spot_light {\n	vec4 position; // light position in eye space\n	vec4 ambient_color;\n	vec4 diffuse_color;\n	vec4 specular_color;\n	vec3 spot_direction; // normalized spot direction\n	vec3 attenuation_factors; // attenuation factors K0, K1, K2\n	bool compute_distance_attenuation;\n	float spot_exponent; // spotlight exponent term\n	float spot_cutoff_angle; // spot cutoff angle in degrees\n};\nstruct material_properties {\n	vec4 ambient_color;\n	vec4 diffuse_color;\n	vec4 specular_color;\n	float specular_exponent;\n};\n\nconst float c_zero = 0.0;\nconst float c_one = 1.0;\n\nuniform material_properties material;\nuniform spot_light light;\n\n// normal and position are normal and position values in eye space.\n// normal is a normalized vector.\n// returns the computed color.\n \nvec4 spot_light(vec3 normal, vec4 position)\n{\n	vec4 computed_color = vec4(c_zero, c_zero, c_zero, c_zero);\n	vec3 lightdir;\n	vec3 halfplane;\n	float ndotl, ndoth;\n	float att_factor;\n	att_factor = c_one;\n	// we assume \"w\" values for light position and\n	// vertex position are the same\n	lightdir = light.position.xyz - position.xyz;\n	// compute distance attenuation\n	if(light.compute_distance_attenuation)\n	{		\n		vec3 att_dist;\n		att_dist.x = c_one;\n		att_dist.z = dot(lightdir, lightdir);\n		att_dist.y = sqrt(att_dist.z);\n		att_factor = c_one / dot(att_dist, light.attenuation_factors);\n	}\n	// normalize the light direction vector\n	lightdir = normalize(lightdir);\n	// compute spot cutoff factor\n	if(light.spot_cutoff_angle < 180.0)\n	{\n		float spot_factor = dot(-lightdir, light.spot_direction);\n		if(spot_factor >= cos(radians(light.spot_cutoff_angle)))\n		spot_factor = pow(spot_factor, light.spot_exponent);\n		else\n		spot_factor = c_zero;\n		// compute combined distance & spot attenuation factor\n		att_factor *= spot_factor;\n	}\n	if(att_factor > c_zero)\n	{\n		// process lighting equation --> compute the light color\n		computed_color += (light.ambient_color * material.ambient_color);\n		ndotl = max(c_zero, dot(normal, lightdir));\n		computed_color += (ndotl * light.diffuse_color * material.diffuse_color);\n		halfplane = normalize(lightdir + vec3(c_zero, c_zero, c_one));\n		ndoth = dot(normal, halfplane);\n		if (ndoth > c_zero)\n		{\n			computed_color += (pow(ndoth, material.specular_exponent)*\n			material.specular_color *\n			light.specular_color);\n		}\n		// multiply color with computed attenuation\n		computed_color *= att_factor;\n	}\n	\n	return computed_color;	\n}",
+			"settings":
+			{
+				"buffer_size": 2422,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "index.html",
+			"settings":
+			{
+				"buffer_size": 2548,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "utils.js",
+			"settings":
+			{
+				"buffer_size": 3836,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "bricks.js",
+			"settings":
+			{
+				"buffer_size": 649,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/W/_resources/JavaScript/three.js/src/Three.js",
+			"settings":
+			{
+				"buffer_size": 160,
 				"line_ending": "Unix"
 			}
 		}
@@ -99,9 +184,53 @@
 	"build_system": "Packages/Nodejs/Nodejs.sublime-build",
 	"command_palette":
 	{
-		"height": 392.0,
+		"height": 55.0,
 		"selected_items":
 		[
+			[
+				"git push",
+				"Git: Push"
+			],
+			[
+				"diff",
+				"Git: Diff Current File"
+			],
+			[
+				"ind",
+				"Indentation: Reindent Lines"
+			],
+			[
+				"gl",
+				"Set Syntax: GLSL"
+			],
+			[
+				"git ",
+				"Git: Commit"
+			],
+			[
+				"commit",
+				"Git: Commit"
+			],
+			[
+				"add",
+				"Git: Add..."
+			],
+			[
+				"stat",
+				"Git: Status"
+			],
+			[
+				"status",
+				"Git: Status"
+			],
+			[
+				"git ad",
+				"Git: Add..."
+			],
+			[
+				"git sta",
+				"Git: Status"
+			],
 			[
 				"list packe",
 				"Package Control: List Packages"
@@ -205,10 +334,6 @@
 			[
 				"git pu",
 				"Git: Pull"
-			],
-			[
-				"git sta",
-				"Git: Status"
 			]
 		],
 		"width": 400.0
@@ -228,6 +353,25 @@
 	},
 	"file_history":
 	[
+		"/C/Users/Enzy/AppData/Local/Temp/scp11953/autotip/log/error.log",
+		"/C/Users/Enzy/AppData/Local/Temp/scp10513/autotip/log/exception 2011-12-05 03-10-28 e6dc58c61b744be72a74bd4bcecaf33e.html",
+		"/C/Work/AutotipNette/db/adminer.sql",
+		"/C/Users/Enzy/AppData/Local/Temp/scp45873/autotip/log/exception 2011-12-05 02-45-28 b9963cfec42d9f3f6a0a18ebfed3c699.html",
+		"/C/Users/Enzy/AppData/Local/Temp/scp39321/autotip/www/.htaccess",
+		"/C/Work/AutotipNette_Export/db/dump_111206.sql",
+		"/C/Work/AutotipNette_Export/db/dump_111204.sql",
+		"/C/Work/AutotipNette_Export/db/dump_111205.sql",
+		"/C/Work/AutotipNette_Export/db/dump_111201.sql",
+		"/C/Users/Enzy/AppData/Local/Temp/scp36361/autotip/app/config.neon",
+		"/C/Users/Enzy/AppData/Local/Temp/scp41097/var/log/apache2/error.log",
+		"/C/Users/Enzy/AppData/Local/Temp/scp42584/var/log/apache2/access_log.log",
+		"/C/Users/Enzy/AppData/Local/Temp/scp43689/var/log/apache2/ssl_access.log",
+		"/C/Work/AutotipNette/bin/generate-docs.bat",
+		"/C/Programs/map_virtual_drives.bat",
+		"/C/School/PGR/3DT/.gitignore",
+		"/C/School/4 sem/TWA/Rotifera/application/controllers/OccurenceController.php",
+		"/C/Users/Enzy/AppData/Roaming/Sublime Text 2/Packages/User/Base File.sublime-settings",
+		"/C/Users/Enzy/AppData/Roaming/Sublime Text 2/Packages/Default/Base File.sublime-settings",
 		"/C/School/PGR/3DT/3DT.sublime-workspace",
 		"/C/School/PGR/3DT/init.js",
 		"/C/School/PGR/3DT/shader.vert",
@@ -249,10 +393,8 @@
 		"/C/School/PGR/CV10/index.html",
 		"/C/School/PGR/CV10/main.js",
 		"/C/School/PGR/CV10/glUtils.js",
-		"/C/Users/Enzy/AppData/Roaming/Sublime Text 2/Packages/User/Base File.sublime-settings",
 		"/C/Users/Enzy/AppData/Roaming/Sublime Text 2/Packages/User/JSON.sublime-settings",
 		"/C/Users/Enzy/AppData/Roaming/Sublime Text 2/Packages/User/Distraction Free.sublime-settings",
-		"/C/Users/Enzy/AppData/Roaming/Sublime Text 2/Packages/Default/Base File.sublime-settings",
 		"/C/Users/Enzy/AppData/Roaming/Sublime Text 2/Packages/User/Default (Windows).sublime-keymap",
 		"/C/Users/Enzy/AppData/Roaming/Sublime Text 2/Packages/Default/Global.sublime-settings",
 		"/C/Users/Enzy/AppData/Local/Temp/7zOA815.tmp/tunnel.v.glsl",
@@ -338,24 +480,7 @@
 		"/W/Clevis/Ulicnik/www/css/screen.css",
 		"/W/Clevis/Ulicnik/www/js/main.js",
 		"/W/Osobni/sublime.txt",
-		"/D/Users/Enzy/AppData/Roaming/Sublime Text 2/Packages/ZenCoding/update_keymaps.bat",
-		"/D/Users/Enzy/AppData/Roaming/Sublime Text 2/Installed Packages/Package Control.sublime-package",
-		"/D/Users/Enzy/AppData/Roaming/Sublime Text 2/Packages/User/Default (Windows).sublime-keymap",
-		"/D/Users/Enzy/AppData/Roaming/Sublime Text 2/Packages/User/Global.sublime-settings",
-		"/D/Users/Enzy/AppData/Roaming/Sublime Text 2/Settings/Session.sublime_session",
-		"/W/Clevis/Ulicnik/templates/registrace2.html",
-		"/W/Clevis/Ulicnik/templates/uzivatelska_stranka.html",
-		"/W/Clevis/Ulicnik/templates/stranka_obce.html",
-		"/W/Clevis/Ulicnik/templates/registrace1.html",
-		"/D/Temp/scp44218/var/log/apache2/access_log.log",
-		"/W/Clevis/Ulicnik/tests/libs/PHPUnit/File/Iterator/Factory.php",
-		"/W/Clevis/Ulicnik/templates/uzivatelsky_profil.html",
-		"/W/Clevis/Ulicnik/templates/sprava_problemu.html",
-		"/W/Clevis/Ulicnik/.gitignore",
-		"/W/Clevis/Ulicnik/libs/Extras/jasir-RequestsPanel-4585659/RequestsPanel.php",
-		"/W/Clevis/Ulicnik/libs/Nette/Application/Link.php",
-		"/W/Clevis/Ulicnik/libs/Nette/Application/Presenter.php",
-		"/W/Clevis/Ulicnik/libs/Nette/tools/Object.php"
+		"/D/Users/Enzy/AppData/Roaming/Sublime Text 2/Packages/ZenCoding/update_keymaps.bat"
 	],
 	"find":
 	{
@@ -363,9 +488,11 @@
 	},
 	"find_in_files":
 	{
-		"height": 88.0,
+		"height": 0.0,
 		"where_history":
 		[
+			"W:\\_resources\\JavaScript\\three.js\\src",
+			"<open folders>",
 			"C:\\School\\PGR\\3DT",
 			"D:\\School\\PGR\\3DT",
 			"W:\\Clevis\\Eleda\\app\\TeacherModule"
@@ -376,6 +503,58 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+			" gl",
+			"gl",
+			"_skybox",
+			"glVertexIndexBuffer",
+			"glVertices",
+			"directionalLightWeighting",
+			"vLightWeighting",
+			"lightWeighting",
+			"uLightingColor",
+			"directionalLightWeighting",
+			"lightDirection",
+			"uPointLightingDirection",
+			"transformedNormal",
+			"uOuterAngle",
+			"directionalLightWeighting",
+			"uInnerAngle",
+			"uPointLightingColor",
+			"directionalLightWeighting",
+			"lightDirection",
+			"transformedNormal",
+			"vLightDirection",
+			"vTransformedNormal",
+			"lightDirection",
+			"directionalLightWeighting",
+			"transformedNormal",
+			"directionalLightWeighting",
+			"transformedNormal",
+			"aVertexColor",
+			"light",
+			"spot_light",
+			"material_properties",
+			"spot_light",
+			"flipSided",
+			"flipSided\n	",
+			"\n	",
+			",\n	    angle: [0, 0, 0]",
+			"uAmbientColor",
+			"uAlpha",
+			"1",
+			"mvMatrixStack",
+			"sceneRotationMatrix",
+			"vColor",
+			"vTextureCoord",
+			"vColor",
+			"vLightWeighting",
+			"directionalLightWeighting",
+			"transformedNormal",
+			"mvPosition",
+			"lightDirection",
+			"vertexColorAttribute",
+			"uUseColor",
+			"uUseLighting",
 			"lightingColorUniform",
 			"lightingLocationUniform",
 			"ambientColorUniform",
@@ -451,59 +630,7 @@
 			"translate",
 			"identity",
 			"stencil",
-			"glColorBuffer",
-			"bufferData",
-			"glIndexBuffer",
-			"glPositionBuffer",
-			"ShadowOverlay",
-			"cubeAngle",
-			"sceneRotationMatrix",
-			"useLightingUniform",
-			"uUseLighting",
-			"lightingColorUniform",
-			"lightingLocationUniform",
-			"ambientColorUniform",
-			"lightingDirection",
-			"lightingDirectionUniform",
-			"ambientColorUniform",
-			"uAmbientColor",
-			"initialize",
-			"ShadowBuilder",
-			"shapeInstances",
-			"glPositionBuffer",
-			"glVertexIndexBuffer",
-			"texture",
-			"createTexture",
-			"createLight",
-			"update",
-			"createShadowBuilder",
-			"createStar",
-			"createPyramid",
-			"createTexture",
-			"createCube",
-			"Usefull utilities",
-			"texture",
-			"...",
-			"createShadowBuilder",
-			"...",
-			"addTriangle",
-			"addVextex",
-			"/",
-			"shape",
-			"ESShape",
-			"\\",
-			"extend",
-			"Klass",
-			"useLightingUniform",
-			"Klass",
-			"uUseLighting",
-			"uDirectionalColor",
-			"uLightingDirection",
-			"mvPosition",
-			"lightDirection",
-			"transformedNormal",
-			"uAmbientColor",
-			"directionalLightWeighting"
+			"glColorBuffer"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -532,7 +659,7 @@
 	"groups":
 	[
 		{
-			"selected": 0,
+			"selected": 2,
 			"sheets":
 			[
 				{
@@ -540,15 +667,15 @@
 					"file": "init.js",
 					"settings":
 					{
-						"buffer_size": 7954,
+						"buffer_size": 6590,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								6044,
-								6044
+								1747,
+								1747
 							]
 						],
 						"settings":
@@ -558,7 +685,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 2127.0,
+						"translation.y": 558.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -568,15 +695,15 @@
 					"file": "lights.js",
 					"settings":
 					{
-						"buffer_size": 1209,
+						"buffer_size": 3639,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								1027,
+								1027
 							]
 						],
 						"settings":
@@ -586,7 +713,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 96.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -596,7 +723,63 @@
 					"file": "shapes.js",
 					"settings":
 					{
-						"buffer_size": 12018,
+						"buffer_size": 13063,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								147,
+								147
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 4032.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "game.js",
+					"settings":
+					{
+						"buffer_size": 9569,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1447,
+								1447
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 48.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "shader.vert",
+					"settings":
+					{
+						"buffer_size": 1389,
 						"regions":
 						{
 						},
@@ -605,6 +788,523 @@
 							[
 								0,
 								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/GLSL.tmbundle/Syntaxes/GLSL.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"settings":
+					{
+						"buffer_size": 1410,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1410,
+								1410
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Diff/Diff.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "shader.frag",
+					"settings":
+					{
+						"buffer_size": 324,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								316,
+								316
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/GLSL.tmbundle/Syntaxes/GLSL.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"settings":
+					{
+						"buffer_size": 59441,
+						"regions":
+						{
+							"match":
+							{
+								"flags": 112,
+								"regions":
+								[
+									[
+										165,
+										184
+									],
+									[
+										384,
+										403
+									],
+									[
+										405,
+										424
+									],
+									[
+										566,
+										585
+									],
+									[
+										628,
+										647
+									],
+									[
+										907,
+										926
+									],
+									[
+										1167,
+										1180
+									],
+									[
+										1349,
+										1362
+									],
+									[
+										1439,
+										1452
+									],
+									[
+										1546,
+										1559
+									],
+									[
+										2006,
+										2015
+									],
+									[
+										2367,
+										2376
+									],
+									[
+										4084,
+										4093
+									],
+									[
+										6181,
+										6190
+									],
+									[
+										8344,
+										8353
+									],
+									[
+										8765,
+										8774
+									],
+									[
+										11666,
+										11675
+									],
+									[
+										11678,
+										11687
+									],
+									[
+										11730,
+										11739
+									],
+									[
+										14409,
+										14418
+									],
+									[
+										14429,
+										14438
+									],
+									[
+										17632,
+										17641
+									],
+									[
+										19729,
+										19738
+									],
+									[
+										21885,
+										21894
+									],
+									[
+										22301,
+										22310
+									],
+									[
+										25336,
+										25345
+									],
+									[
+										27433,
+										27442
+									],
+									[
+										29586,
+										29595
+									],
+									[
+										30002,
+										30011
+									],
+									[
+										33146,
+										33155
+									],
+									[
+										33166,
+										33175
+									],
+									[
+										36366,
+										36375
+									],
+									[
+										38463,
+										38472
+									],
+									[
+										40616,
+										40625
+									],
+									[
+										41032,
+										41041
+									],
+									[
+										44112,
+										44121
+									],
+									[
+										46213,
+										46222
+									],
+									[
+										48411,
+										48420
+									],
+									[
+										48832,
+										48841
+									],
+									[
+										51697,
+										51706
+									],
+									[
+										51709,
+										51718
+									],
+									[
+										51761,
+										51770
+									],
+									[
+										53077,
+										53086
+									],
+									[
+										53337,
+										53346
+									],
+									[
+										53600,
+										53609
+									],
+									[
+										53841,
+										53850
+									],
+									[
+										54103,
+										54112
+									],
+									[
+										54383,
+										54392
+									],
+									[
+										54641,
+										54650
+									],
+									[
+										54922,
+										54931
+									],
+									[
+										55173,
+										55182
+									],
+									[
+										55434,
+										55443
+									],
+									[
+										55696,
+										55705
+									],
+									[
+										55868,
+										55877
+									],
+									[
+										56101,
+										56110
+									],
+									[
+										56479,
+										56488
+									],
+									[
+										56868,
+										56877
+									],
+									[
+										57141,
+										57150
+									],
+									[
+										57160,
+										57169
+									],
+									[
+										57354,
+										57363
+									],
+									[
+										57397,
+										57406
+									],
+									[
+										57514,
+										57523
+									],
+									[
+										57739,
+										57748
+									],
+									[
+										57972,
+										57981
+									],
+									[
+										58350,
+										58359
+									],
+									[
+										58739,
+										58748
+									],
+									[
+										59012,
+										59021
+									],
+									[
+										59031,
+										59040
+									],
+									[
+										59225,
+										59234
+									],
+									[
+										59268,
+										59277
+									],
+									[
+										59385,
+										59394
+									]
+								],
+								"scope": ""
+							}
+						},
+						"selection":
+						[
+							[
+								59271,
+								59271
+							],
+							[
+								59281,
+								59281
+							]
+						],
+						"settings":
+						{
+							"detect_indentation": false,
+							"output_tag": 5,
+							"result_base_dir": "",
+							"result_file_regex": "^([A-Za-z\\\\/<].*):$",
+							"result_line_regex": "^ +([0-9]+):",
+							"scroll_past_end": true,
+							"syntax": "Packages/Default/Find Results.hidden-tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 8848.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"file": "/W/_resources/JavaScript/three.js/src/renderers/WebGLRenderer.js",
+					"settings":
+					{
+						"buffer_size": 145630,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								120675,
+								120651
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 80095.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 9,
+					"settings":
+					{
+						"buffer_size": 2422,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								560,
+								560
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/GLSL.tmbundle/Syntaxes/GLSL.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 10,
+					"file": "index.html",
+					"settings":
+					{
+						"buffer_size": 2548,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								859,
+								859
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 11,
+					"file": "utils.js",
+					"settings":
+					{
+						"buffer_size": 3836,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3630,
+								3630
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 2062.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 12,
+					"file": "bricks.js",
+					"settings":
+					{
+						"buffer_size": 649,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								202,
+								202
 							]
 						],
 						"settings":
@@ -620,26 +1320,24 @@
 					"type": "text"
 				},
 				{
-					"buffer": 3,
-					"file": "game.js",
+					"buffer": 13,
+					"file": "/W/_resources/JavaScript/three.js/src/Three.js",
 					"settings":
 					{
-						"buffer_size": 4073,
+						"buffer_size": 160,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								160,
+								160
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
@@ -691,6 +1389,10 @@
 		"height": 0.0,
 		"selected_items":
 		[
+			[
+				"lig",
+				"lights.js"
+			],
 			[
 				"init",
 				"init.js"
